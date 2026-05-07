@@ -1,6 +1,4 @@
 // import {useEffect} from 'react'
-
-import './App.css'
 import {useQuery} from "@tanstack/react-query";
 import {client} from "./shared/api/client.ts";
 import {useEffect, useState} from "react";
@@ -27,6 +25,9 @@ function App() {
 const Playlists = () => {
     const query = useQuery({
         staleTime: 20000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
         // gcTime: 5 * 1000,
         queryKey: ['playlists'],
         queryFn: () => client.GET("/playlists")

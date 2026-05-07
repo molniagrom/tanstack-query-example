@@ -659,7 +659,7 @@ export interface components {
              * @description Date and time when the playlist was last updated (ISO 8601)
              */
             updatedAt: string;
-            /** @description Order index of the playlist */
+            /** @description Order index.css of the playlist */
             order: number;
             /** @description User who created the playlist */
             user: components["schemas"]["UserRef"];
@@ -721,7 +721,7 @@ export interface components {
              * @description Date and time when the playlist was last updated (ISO 8601)
              */
             updatedAt: string;
-            /** @description Order index of the playlist */
+            /** @description Order index.css of the playlist */
             order: number;
             /** @description User who created the playlist */
             user: components["schemas"]["UserRef"];
@@ -976,7 +976,7 @@ export interface components {
         TrackListItemAttributesForPlaylist: {
             /** @description Title of the track */
             title: string;
-            /** @description Order index of the track in the playlist */
+            /** @description Order index.css of the track in the playlist */
             order: number;
             /**
              * Format: date-time
