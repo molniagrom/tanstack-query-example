@@ -1,0 +1,12 @@
+.page {
+  width: min(var(--page-width), calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+@media (max-width: 720px) {
+  .page {
+    width: min(var(--page-width), calc(100% - 24px));
+    padding: 24px 0 40px;
+  }
+}

@@ -1,0 +1,33 @@
+.shell {
+  display: grid;
+  gap: 24px;
+}
+
+.hero {
+  display: grid;
+  gap: 10px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.82));
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+.description {
+  max-width: 56ch;
+  color: var(--text);
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 22px;
+  }
+}

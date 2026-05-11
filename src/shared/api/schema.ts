@@ -954,7 +954,7 @@ export interface components {
             pageSize: number;
             /** @description Total count may be absent when using keyset pagination */
             totalCount: number | null;
-            /** @description Total number of pages */
+            /** @description Total number of auth */
             pagesCount: number | null;
             /** @description Cursor for the next page */
             nextCursor: string | null;
