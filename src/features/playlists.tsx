@@ -1,21 +1,29 @@
-import { useQuery } from '@tanstack/react-query'
-import { client } from '../shared/api/client.ts'
+import {keepPreviousData, useQuery} from '@tanstack/react-query'
+import {client} from '../shared/api/client.ts'
 import styles from './playlists.module.css'
+import {Pagination} from "../shared/ui/pagination";
+import {useState} from "react";
 
 export const Playlists = () => {
+    const [page, setPage] = useState<number>(1)
+
     const query = useQuery({
-        staleTime: 20000,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        queryKey: ['playlists'],
-        queryFn: async () => {
-            const response = await client.GET('/playlists' as unknown as "/playlists")
+        queryKey: ['playlists', page],
+        queryFn: async ({signal}) => {
+            const response = await client.GET('/playlists', {
+                params: {
+                    query: {
+                        pageNumber: page
+                    }
+                },
+                signal
+            })
             if (response.error) {
-                throw (response as unknown as {error: Error}).error;
+                throw (response as unknown as { error: Error }).error;
             }
             return response.data;
-        }
+        },
+        placeholderData: keepPreviousData
     })
 
     const playlists = query.data?.data ?? []
@@ -38,6 +46,11 @@ export const Playlists = () => {
 
     return (
         <section className={styles.section}>
+            <Pagination pagesCount={query.data.meta.pagesCount}
+                        currentPage={page}
+                        onPageNumberChange={setPage}
+                        isFetching={query.isFetching}
+            />
             <div className={styles.statusRow}>
                 <button
                     type="button"
@@ -50,7 +63,7 @@ export const Playlists = () => {
 
                 {query.isFetching && (
                     <div className={styles.statusBadge} aria-live="polite">
-                        <span className={styles.statusDot} aria-hidden="true" />
+                        <span className={styles.statusDot} aria-hidden="true"/>
                         Updating
                     </div>
                 )}
