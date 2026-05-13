@@ -6,14 +6,16 @@ import {useState} from "react";
 
 export const Playlists = () => {
     const [page, setPage] = useState<number>(1)
+    const [search, setSearch] = useState<string>("")
 
     const query = useQuery({
-        queryKey: ['playlists', page],
+        queryKey: ['playlists', {page, search}],
         queryFn: async ({signal}) => {
             const response = await client.GET('/playlists', {
                 params: {
                     query: {
-                        pageNumber: page
+                        pageNumber: page,
+                        search
                     }
                 },
                 signal
@@ -46,6 +48,11 @@ export const Playlists = () => {
 
     return (
         <section className={styles.section}>
+            <input type="text"
+                   value={search}
+                   onChange={e => setSearch(e.target.value)}
+                   placeholder="Search..."
+            />
             <Pagination pagesCount={query.data.meta.pagesCount}
                         currentPage={page}
                         onPageNumberChange={setPage}

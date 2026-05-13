@@ -1,10 +1,11 @@
 import {Outlet} from "@tanstack/react-router";
 import {Header} from "../../shared/ui/header/header.tsx";
 import s from "./root-layout.module.css"
+import {LoginButton} from "../../features/auth/ui/login-button.tsx";
 
 export const RootLayout = () => (
     <>
-        <Header renderAccountBar={() => <div>Account</div>}/>
+        <Header renderAccountBar={() => <LoginButton/>}/>
         <main className={s.page}>
             <Outlet/>
         </main>

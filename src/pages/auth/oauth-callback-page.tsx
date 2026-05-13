@@ -1,7 +1,17 @@
-// import { Playlists } from '../../features/playlists.tsx'
 import styles from '../page-shell.module.css'
+import {useEffect} from "react";
 
 export function OauthCallbackPage() {
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const code = url.searchParams.get("code")
+
+        if (code && window.opener) {
+            window.opener.postMessage({code}, window.location.origin)
+        }
+        window.close()
+    }, [])
+
     return (
         <section className={styles.shell}>
             <div className={styles.hero}>
