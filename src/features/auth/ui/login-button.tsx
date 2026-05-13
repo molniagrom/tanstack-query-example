@@ -1,5 +1,6 @@
 import {useMutation} from "@tanstack/react-query";
 import {client} from "../../../shared/api/client.ts";
+import styles from './account-bar.module.css'
 
 export const LoginButton = () => {
     const callbackUrl = "http://localhost:5173/oauth/callback"
@@ -55,5 +56,9 @@ export const LoginButton = () => {
 
     }
 
-    return <button onClick={handleLoginClick}> Login with APIHUB</button>
+    return (
+        <button className={styles.loginButton} onClick={handleLoginClick} disabled={mutation.isPending}>
+            Login with APIHUB
+        </button>
+    )
 }
