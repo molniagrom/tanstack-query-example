@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 40px;
+  min-width: 0;
 }
 
 .loginButton {
@@ -35,21 +36,27 @@
 
 .meInfoContainer {
   display: inline-flex;
-  align-items: center;
+  align-items: stretch;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  overflow: hidden;
 }
 
 .userLink {
   display: inline-flex;
   align-items: center;
+  min-width: 0;
   min-height: 40px;
   padding: 0 14px;
-  border-radius: 999px;
-  background: var(--surface-strong);
-  border: 1px solid var(--border);
+  background: transparent;
+  border: 0;
   color: var(--text-strong);
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 500;
+  white-space: nowrap;
   transition:
     background-color 0.18s ease,
     border-color 0.18s ease,
@@ -58,6 +65,35 @@
 
 .userLink:hover {
   background: rgba(255, 255, 255, 0.72);
+}
+
+.logoutButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-strong);
+  font-size: 0.92rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.logoutButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.logoutButton:disabled {
+  cursor: default;
+  opacity: 0.6;
 }
 
 .loadingText {
