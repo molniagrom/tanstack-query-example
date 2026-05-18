@@ -1,7 +1,9 @@
-import { Playlists } from '../features/playlists.tsx'
+
 import styles from './page-shell.module.css'
 import {useMeQuery} from "../features/auth/api/use-me-query.ts";
 import {Navigate} from "@tanstack/react-router";
+import {AddPlaylistForm} from "../features/playlist/ui/AddPlaylistForm.tsx";
+import {Playlists} from "../widgets/playlists/ui/playlists.tsx";
 
 export function MyPlaylistsPage() {
 
@@ -24,6 +26,10 @@ export function MyPlaylistsPage() {
                     Same structure, same rhythm, no extra decoration. Just a neat page shell for personal collections.
                 </p>
             </div>
+
+            <hr/>
+            <AddPlaylistForm/>
+            <hr/>
 
             <Playlists userId={data.userId}/>
         </section>

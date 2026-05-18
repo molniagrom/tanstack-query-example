@@ -1,7 +1,7 @@
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
-import {client} from '../shared/api/client.ts'
+import {client} from '../../../shared/api/client.ts'
 import styles from './playlists.module.css'
-import {Pagination} from "../shared/ui/pagination";
+import {Pagination} from "../../../shared/ui/pagination";
 import {useState} from "react";
 
 type Props = {
