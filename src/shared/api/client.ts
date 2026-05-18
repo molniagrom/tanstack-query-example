@@ -1,4 +1,4 @@
-import createClient, { type Middleware } from 'openapi-fetch'
+import createClient, {type Middleware, type MiddlewareCallbackParams} from 'openapi-fetch'
 import type { paths } from './schema'
 
 let refreshPromise: Promise<void> | null = null
@@ -37,17 +37,19 @@ function makeRefreshToken(): Promise<void> {
     refreshPromise.finally(() => {
       refreshPromise = null
     })
+
+    return refreshPromise
   }
 
   return refreshPromise
 }
 
 const authMyMiddleware: Middleware = {
-  async onRequest({ request }) {
-    const accessToken = localStorage.getItem('musicfun-access-token')
-
+  onRequest({ request }: MiddlewareCallbackParams) {
+    // set "foo" header
+    const accessToken = localStorage.getItem("musicfun-access-token")
     if (accessToken) {
-      request.headers.set('Authorization', `Bearer ${accessToken}`)
+      request.headers.set("Authorization", "Bearer " + accessToken)
     }
 
     // @ts-expect-error hot fix
@@ -58,26 +60,21 @@ const authMyMiddleware: Middleware = {
 
   async onResponse({ request, response }) {
     if (response.ok) return response
-
-    if (response.status !== 401) {
+    if (!response.ok && response.status !== 401) {
       throw new Error(`${response.url}: ${response.status} ${response.statusText}`)
     }
 
     try {
       await makeRefreshToken()
-
       // @ts-expect-error ignore it
       const originalRequest: Request = request._retryRequest
-
       const retryRequest = new Request(originalRequest, {
         headers: new Headers(originalRequest.headers),
       })
-
       retryRequest.headers.set(
-        'Authorization',
-        `Bearer ${localStorage.getItem('musicfun-access-token') ?? ''}`,
+          "Authorization",
+          "Bearer " + localStorage.getItem("musicfun-access-token"),
       )
-
       return fetch(retryRequest)
     } catch {
       return response
