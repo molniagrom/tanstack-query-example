@@ -6,10 +6,10 @@ type Props = {
 }
 
 export const DeletePlaylist = ({playlistId}: Props) => {
-    const {mutate} = useDeleteMutation();
+    const {mutate} = useDeleteMutation(playlistId);
 
     const handleDeleteClick = () => {
-        mutate(playlistId);
+        mutate();
     }
 
     return (
