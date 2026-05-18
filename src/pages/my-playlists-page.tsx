@@ -2,8 +2,9 @@
 import styles from './page-shell.module.css'
 import {useMeQuery} from "../features/auth/api/use-me-query.ts";
 import {Navigate} from "@tanstack/react-router";
-import {AddPlaylistForm} from "../features/playlist/ui/AddPlaylistForm.tsx";
+
 import {Playlists} from "../widgets/playlists/ui/playlists.tsx";
+import {AddPlaylistForm} from "../features/playlist/add-playlist/ui/AddPlaylistForm.tsx";
 
 export function MyPlaylistsPage() {
 

@@ -85,7 +85,7 @@
 
 .item {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 16px;
   padding: 18px 20px;
@@ -156,11 +156,11 @@
   }
 
   .item {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
   }
 
   .badge {
-    grid-column: 1 / -1;
+    grid-column: 2 / -1;
     justify-self: flex-start;
   }
 }

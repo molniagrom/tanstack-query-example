@@ -3,6 +3,7 @@ import {client} from '../../../shared/api/client.ts'
 import styles from './playlists.module.css'
 import {Pagination} from "../../../shared/ui/pagination";
 import {useState} from "react";
+import {DeletePlaylist} from "../../../features/playlist/delete-playlist/ui/delete-playlist.tsx";
 
 type Props = {
     userId?: string
@@ -96,7 +97,7 @@ export const Playlists = ({userId}: Props) => {
                                     {authorName} • {tagsCount} {tagsCount === 1 ? 'tag' : 'tags'}
                                 </span>
                             </div>
-
+                            <DeletePlaylist playlistId={playlist.id}/>
                             <span className={styles.badge}>#{playlist.attributes.order}</span>
                         </li>
                     )

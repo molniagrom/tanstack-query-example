@@ -1,5 +1,6 @@
-import { Playlists } from '../features/playlists/ui/playlists.tsx'
+
 import styles from './page-shell.module.css'
+import {Playlists} from "../widgets/playlists/ui/playlists.tsx";
 
 function PlaylistsPage() {
     return (
