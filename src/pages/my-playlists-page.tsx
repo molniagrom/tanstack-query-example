@@ -1,14 +1,16 @@
-
 import styles from './page-shell.module.css'
 import {useMeQuery} from "../features/auth/api/use-me-query.ts";
 import {Navigate} from "@tanstack/react-router";
 
 import {Playlists} from "../widgets/playlists/ui/playlists.tsx";
 import {AddPlaylistForm} from "../features/playlist/add-playlist/ui/AddPlaylistForm.tsx";
+import {useState} from "react";
+import {EditPlaylistForm} from "../features/playlist/edit-playlist/ui/EditPlaylistForm.tsx";
 
 export function MyPlaylistsPage() {
 
     const {data, isPending} = useMeQuery()
+    const [editingPlaylistId, setEditingPlaylistId] = useState<string | null>(null)
 
     if (isPending) {
         return <div>Loading...</div>
@@ -31,8 +33,8 @@ export function MyPlaylistsPage() {
             <hr/>
             <AddPlaylistForm/>
             <hr/>
-
-            <Playlists userId={data.userId}/>
+            {editingPlaylistId && <EditPlaylistForm key={editingPlaylistId} playlistId={editingPlaylistId} onClose={() => setEditingPlaylistId(null)}/>}
+            <Playlists userId={data.userId} onPlaylistSelected={setEditingPlaylistId}/>
         </section>
     )
 }

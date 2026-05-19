@@ -7,9 +7,10 @@ import {DeletePlaylist} from "../../../features/playlist/delete-playlist/ui/dele
 
 type Props = {
     userId?: string
+    onPlaylistSelected?: (playlistId: string) => void
 }
 
-export const Playlists = ({userId}: Props) => {
+export const Playlists = ({userId, onPlaylistSelected}: Props) => {
     const [page, setPage] = useState<number>(1)
     const [search, setSearch] = useState<string>("")
 
@@ -46,6 +47,10 @@ export const Playlists = ({userId}: Props) => {
                 Error: {query.error.message}
             </div>
         )
+    }
+
+    const handleSelectPlaylistClick = (playlistId: string) => {
+        onPlaylistSelected?.(playlistId)
     }
 
     if (playlists.length === 0) {
@@ -97,7 +102,18 @@ export const Playlists = ({userId}: Props) => {
                                     {authorName} • {tagsCount} {tagsCount === 1 ? 'tag' : 'tags'}
                                 </span>
                             </div>
-                            <DeletePlaylist playlistId={playlist.id}/>
+                            <div className={styles.actions}>
+                                <button
+                                    type="button"
+                                    className={styles.editButton}
+                                    onClick={() => handleSelectPlaylistClick(playlist.id)}
+                                    aria-label="Edit playlist"
+                                    title="Edit playlist"
+                                >
+                                    ✏️
+                                </button>
+                                <DeletePlaylist playlistId={playlist.id}/>
+                            </div>
                             <span className={styles.badge}>#{playlist.attributes.order}</span>
                         </li>
                     )
