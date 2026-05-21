@@ -11,7 +11,7 @@ type EditPlaylistFormValues = {
 }
 
 type Props = {
-    playlistId: string
+    playlistId: string | null
     onClose: () => void
 }
 
@@ -19,12 +19,23 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
 
     const {handleSubmit, register, reset} = useForm<EditPlaylistFormValues>()
 
+    useEffect(() => {
+        reset();
+    }, [playlistId]);
+
     const {data, isPending, isError} = useQuery({
         queryKey: ['playlists', playlistId],
         queryFn: async () => {
-            const response = await client.GET("/playlists/{playlistId}", {params: {path: {playlistId}}})
+            const response = await client.GET("/playlists/{playlistId}", {
+                params: {
+                    path: {
+                        playlistId: playlistId!
+                    }
+                }
+            })
             return response.data!
-        }
+        },
+        enabled: !!playlistId,
     })
 
     useEffect(() => {
@@ -40,10 +51,13 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
 
     const {mutate} = useMutation({
         mutationFn: async (data: SchemaUpdatePlaylistRequestPayload) => {
+            if (!playlistId) {
+                throw new Error("playlistId is required");
+            }
 
             const response = await client.PUT("/playlists/{playlistId}", {
                 params: {
-                    path: {playlistId}
+                    path: {playlistId: playlistId}
                 },
                 body: {...data, tagIds: []}
             })
@@ -75,16 +89,23 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
         mutate(payload)
     }
 
+    if (!playlistId) return <></>
+
     if (isPending) {
-        return <div className={styles.overlay}><div className={styles.statusCard}>Loading...</div></div>
+        return <div className={styles.overlay}>
+            <div className={styles.statusCard}>Loading...</div>
+        </div>
     }
 
     if (isError) {
-        return <div className={styles.overlay}><div className={styles.statusCard}>Some Error...</div></div>
+        return <div className={styles.overlay}>
+            <div className={styles.statusCard}>Some Error...</div>
+        </div>
     }
 
     return <div className={styles.overlay} onClick={onClose}>
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form} role="dialog" aria-modal="true" aria-labelledby="edit-playlist-title" onClick={e => e.stopPropagation()}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form} role="dialog" aria-modal="true"
+              aria-labelledby="edit-playlist-title" onClick={e => e.stopPropagation()}>
             <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Close edit dialog">
                 ×
             </button>
@@ -93,7 +114,8 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
                 <input {...register("title")} className={styles.input} defaultValue={data.data.attributes.title}/>
             </p>
             <p className={styles.field}>
-                <textarea {...register("description")} className={styles.textarea} defaultValue={data.data.attributes.description!}/>
+                <textarea {...register("description")} className={styles.textarea}
+                          defaultValue={data.data.attributes.description!}/>
             </p>
             <button className={styles.submitButton} type={"submit"}>Save</button>
         </form>
