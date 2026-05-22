@@ -8,22 +8,28 @@ import {DeletePlaylist} from "../../../features/playlist/delete-playlist/ui/dele
 type Props = {
     userId?: string
     onPlaylistSelected?: (playlistId: string) => void
+    isSearchActive?: boolean
 }
 
-export const Playlists = ({userId, onPlaylistSelected}: Props) => {
+export const Playlists = ({userId, onPlaylistSelected, isSearchActive}: Props) => {
     const [page, setPage] = useState<number>(1)
     const [search, setSearch] = useState<string>("")
 
+    const key = userId ? ['playlists', 'my', userId] : ['playlists', {search, page}]
+    const queryParams = userId ? {
+        userId,
+    } : {
+        pageNumber: page,
+        search,
+        userId
+    }
+
     const query = useQuery({
-        queryKey: ['playlists', {page, search, userId}],
+        queryKey: key,
         queryFn: async ({signal}) => {
             const response = await client.GET('/playlists', {
                 params: {
-                    query: {
-                        pageNumber: page,
-                        search,
-                        userId
-                    }
+                    query: queryParams
                 },
                 signal
             })
@@ -59,11 +65,17 @@ export const Playlists = ({userId, onPlaylistSelected}: Props) => {
 
     return (
         <section className={styles.section}>
-            <input type="text"
-                   value={search}
-                   onChange={e => setSearch(e.target.value)}
-                   placeholder="Search..."
-            />
+            {isSearchActive && (
+                <div className={styles.searchRow}>
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        placeholder="Search..."
+                        className={styles.searchInput}
+                    />
+                </div>
+            )}
             <Pagination pagesCount={query.data.meta.pagesCount}
                         currentPage={page}
                         onPageNumberChange={setPage}

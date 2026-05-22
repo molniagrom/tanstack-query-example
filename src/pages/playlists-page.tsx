@@ -13,7 +13,7 @@ function PlaylistsPage() {
                 </p>
             </div>
 
-            <Playlists />
+            <Playlists isSearchActive={true}/>
         </section>
     )
 }

@@ -3,7 +3,11 @@ import {useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {client} from "../../../../shared/api/client.ts";
-import type {SchemaUpdatePlaylistRequestPayload} from "../../../../shared/api/schema.ts";
+import type {
+    SchemaGetPlaylistOutput,
+    SchemaGetPlaylistsOutput,
+    SchemaUpdatePlaylistRequestPayload
+} from "../../../../shared/api/schema.ts";
 
 type EditPlaylistFormValues = {
     title: string
@@ -21,10 +25,10 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
 
     useEffect(() => {
         reset();
-    }, [playlistId]);
+    }, [playlistId, reset]);
 
     const {data, isPending, isError} = useQuery({
-        queryKey: ['playlists', playlistId],
+        queryKey: ['playlists', 'details', playlistId],
         queryFn: async () => {
             const response = await client.GET("/playlists/{playlistId}", {
                 params: {
@@ -49,6 +53,8 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
 
     const queryClient = useQueryClient()
 
+    const key = ['playlists', 'details', playlistId];
+
     const {mutate} = useMutation({
         mutationFn: async (data: SchemaUpdatePlaylistRequestPayload) => {
             if (!playlistId) {
@@ -59,19 +65,64 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
                 params: {
                     path: {playlistId: playlistId}
                 },
-                body: {...data, tagIds: []}
+                body: data
             })
 
             return response.data
         },
 
-        onSuccess: () => {
-            queryClient.invalidateQueries({
+        onSuccess: (_data, payload) => {
+            queryClient.setQueryData<SchemaGetPlaylistOutput>(key, prevData => {
+                if (!prevData) {
+                    return prevData
+                }
+
+                return {
+                    ...prevData,
+                    data: {
+                        ...prevData.data,
+                        attributes: {
+                            ...prevData.data.attributes,
+                            description: payload.data.attributes.description,
+                            title: payload.data.attributes.title,
+                        }
+                    }
+                }
+            })
+
+            queryClient.setQueriesData<SchemaGetPlaylistsOutput>(
+                {queryKey: ['playlists']},
+                prevData => {
+                    if (!prevData || !Array.isArray(prevData.data)) {
+                        return prevData
+                    }
+
+                    return {
+                        ...prevData,
+                        data: prevData.data.map(p => {
+                            if (p.id !== playlistId) {
+                                return p
+                            }
+
+                            return {
+                                ...p,
+                                attributes: {
+                                    ...p.attributes,
+                                    description: payload.data.attributes.description,
+                                    title: payload.data.attributes.title,
+                                }
+                            }
+                        })
+                    }
+                }
+            )
+
+            onClose()
+            void queryClient.invalidateQueries({
                 queryKey: ['playlists'],
                 refetchType: "all"
             })
-            onClose()
-        }
+        },
     })
 
     const onSubmit = (values: EditPlaylistFormValues) => {
