@@ -2,7 +2,6 @@ import styles from './EditPlaylistForm.module.css'
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {z} from "zod";
 import {client} from "../../../../shared/api/client.ts";
 import type {
     SchemaGetPlaylistOutput,
@@ -10,23 +9,8 @@ import type {
     SchemaUpdatePlaylistRequestPayload
 } from "../../../../shared/api/schema.ts";
 import {usePlaylistQuery} from "../api/use-playlist-query.tsx";
-
-const editPlaylistSchema = z.object({
-    title: z
-        .string()
-        .trim()
-        .min(1, "Title is required")
-        .max(10, "Title must be at most 100 characters"),
-    description: z
-        .string()
-        .trim()
-        .max(200, "Description must be at most 1000 characters"),
-})
-
-type EditPlaylistFormValues = {
-    title: string
-    description: string
-}
+import {type EditPlaylistFormValues, validateEditPlaylistForm} from "./edit-playlist-form.validation.ts";
+import {useUpdatePlaylistMutation} from "../api/use-update-playlist-mutation.ts";
 
 type Props = {
     playlistId: string | null
@@ -65,78 +49,7 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
         })
     }, [data, reset])
 
-    const queryClient = useQueryClient()
-    const key = ['playlists', 'details', playlistId] as const
-
-    const {mutateAsync} = useMutation({
-        mutationFn: async (payload: SchemaUpdatePlaylistRequestPayload) => {
-            if (!playlistId) {
-                throw new Error("playlistId is required");
-            }
-
-            const response = await client.PUT("/playlists/{playlistId}", {
-                params: {
-                    path: {playlistId}
-                },
-                body: payload
-            })
-
-            return response.data
-        },
-
-        onSuccess: (_data, payload) => {
-            queryClient.setQueryData<SchemaGetPlaylistOutput>(key, prevData => {
-                if (!prevData) {
-                    return prevData
-                }
-
-                return {
-                    ...prevData,
-                    data: {
-                        ...prevData.data,
-                        attributes: {
-                            ...prevData.data.attributes,
-                            description: payload.data.attributes.description,
-                            title: payload.data.attributes.title,
-                        }
-                    }
-                }
-            })
-
-            queryClient.setQueriesData<SchemaGetPlaylistsOutput>(
-                {queryKey: ['playlists']},
-                prevData => {
-                    if (!prevData || !Array.isArray(prevData.data)) {
-                        return prevData
-                    }
-
-                    return {
-                        ...prevData,
-                        data: prevData.data.map(playlist => {
-                            if (playlist.id !== playlistId) {
-                                return playlist
-                            }
-
-                            return {
-                                ...playlist,
-                                attributes: {
-                                    ...playlist.attributes,
-                                    description: payload.data.attributes.description,
-                                    title: payload.data.attributes.title,
-                                }
-                            }
-                        })
-                    }
-                }
-            )
-
-            onClose()
-            void queryClient.invalidateQueries({
-                queryKey: ['playlists'],
-                refetchType: "all"
-            })
-        },
-    })
+    const {mutateAsync} = useUpdatePlaylistMutation(playlistId)
 
     const getErrorMessage = (error: unknown) => {
         if (error instanceof Error && error.message) {
@@ -150,7 +63,7 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
         setSubmitError(null)
         clearErrors()
 
-        const validationResult = editPlaylistSchema.safeParse(values)
+        const validationResult = validateEditPlaylistForm(values)
 
         if (!validationResult.success) {
             validationResult.error.issues.forEach(issue => {
