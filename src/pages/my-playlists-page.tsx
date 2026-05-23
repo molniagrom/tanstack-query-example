@@ -33,7 +33,11 @@ export function MyPlaylistsPage() {
             <hr/>
             <AddPlaylistForm/>
             <hr/>
-            <EditPlaylistForm playlistId={editingPlaylistId} onClose={() => setEditingPlaylistId(null)}/>
+            <EditPlaylistForm
+                key={editingPlaylistId ?? 'closed'}
+                playlistId={editingPlaylistId}
+                onClose={() => setEditingPlaylistId(null)}
+            />
             <Playlists userId={data.userId} onPlaylistSelected={setEditingPlaylistId}/>
         </section>
     )

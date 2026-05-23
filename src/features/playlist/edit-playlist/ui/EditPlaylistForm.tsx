@@ -1,13 +1,26 @@
 import styles from './EditPlaylistForm.module.css'
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {z} from "zod";
 import {client} from "../../../../shared/api/client.ts";
 import type {
     SchemaGetPlaylistOutput,
     SchemaGetPlaylistsOutput,
     SchemaUpdatePlaylistRequestPayload
 } from "../../../../shared/api/schema.ts";
+
+const editPlaylistSchema = z.object({
+    title: z
+        .string()
+        .trim()
+        .min(1, "Title is required")
+        .max(10, "Title must be at most 100 characters"),
+    description: z
+        .string()
+        .trim()
+        .max(200, "Description must be at most 1000 characters"),
+})
 
 type EditPlaylistFormValues = {
     title: string
@@ -20,12 +33,25 @@ type Props = {
 }
 
 export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
-
-    const {handleSubmit, register, reset} = useForm<EditPlaylistFormValues>()
+    const [submitError, setSubmitError] = useState<string | null>(null)
+    const {
+        handleSubmit,
+        register,
+        reset,
+        setError,
+        clearErrors,
+        formState: {errors, isSubmitting}
+    } = useForm<EditPlaylistFormValues>({
+        defaultValues: {
+            title: "",
+            description: "",
+        }
+    })
 
     useEffect(() => {
-        reset();
-    }, [playlistId, reset]);
+        reset()
+        clearErrors()
+    }, [playlistId, reset, clearErrors]);
 
     const {data, isPending, isError} = useQuery({
         queryKey: ['playlists', 'details', playlistId],
@@ -52,20 +78,19 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
     }, [data, reset])
 
     const queryClient = useQueryClient()
+    const key = ['playlists', 'details', playlistId] as const
 
-    const key = ['playlists', 'details', playlistId];
-
-    const {mutate} = useMutation({
-        mutationFn: async (data: SchemaUpdatePlaylistRequestPayload) => {
+    const {mutateAsync} = useMutation({
+        mutationFn: async (payload: SchemaUpdatePlaylistRequestPayload) => {
             if (!playlistId) {
                 throw new Error("playlistId is required");
             }
 
             const response = await client.PUT("/playlists/{playlistId}", {
                 params: {
-                    path: {playlistId: playlistId}
+                    path: {playlistId}
                 },
-                body: data
+                body: payload
             })
 
             return response.data
@@ -99,15 +124,15 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
 
                     return {
                         ...prevData,
-                        data: prevData.data.map(p => {
-                            if (p.id !== playlistId) {
-                                return p
+                        data: prevData.data.map(playlist => {
+                            if (playlist.id !== playlistId) {
+                                return playlist
                             }
 
                             return {
-                                ...p,
+                                ...playlist,
                                 attributes: {
-                                    ...p.attributes,
+                                    ...playlist.attributes,
                                     description: payload.data.attributes.description,
                                     title: payload.data.attributes.title,
                                 }
@@ -125,19 +150,51 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
         },
     })
 
-    const onSubmit = (values: EditPlaylistFormValues) => {
+    const getErrorMessage = (error: unknown) => {
+        if (error instanceof Error && error.message) {
+            return error.message
+        }
+
+        return "Could not save the playlist. Please try again."
+    }
+
+    const onSubmit = async (values: EditPlaylistFormValues) => {
+        setSubmitError(null)
+        clearErrors()
+
+        const validationResult = editPlaylistSchema.safeParse(values)
+
+        if (!validationResult.success) {
+            validationResult.error.issues.forEach(issue => {
+                const field = issue.path[0]
+
+                if (field === "title" || field === "description") {
+                    setError(field, {
+                        type: "zod",
+                        message: issue.message
+                    })
+                }
+            })
+
+            return
+        }
+
         const payload: SchemaUpdatePlaylistRequestPayload = {
             data: {
                 type: "playlists",
                 attributes: {
-                    title: values.title.trim(),
-                    description: values.description.trim() || null,
+                    title: validationResult.data.title,
+                    description: validationResult.data.description || null,
                     tagIds: []
                 }
             }
         }
 
-        mutate(payload)
+        try {
+            await mutateAsync(payload)
+        } catch (error) {
+            setSubmitError(getErrorMessage(error))
+        }
     }
 
     if (!playlistId) return <></>
@@ -155,20 +212,54 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
     }
 
     return <div className={styles.overlay} onClick={onClose}>
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form} role="dialog" aria-modal="true"
-              aria-labelledby="edit-playlist-title" onClick={e => e.stopPropagation()}>
-            <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Close edit dialog">
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={styles.form}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-playlist-title"
+            onClick={e => e.stopPropagation()}
+        >
+            <button
+                type="button"
+                className={styles.closeButton}
+                onClick={onClose}
+                aria-label="Close edit dialog"
+                disabled={isSubmitting}
+            >
                 ×
             </button>
             <h2 id="edit-playlist-title" className={styles.title}>Edit Playlist</h2>
+            {submitError && (
+                <div className={styles.submitError} role="alert">
+                    {submitError}
+                </div>
+            )}
             <p className={styles.field}>
-                <input {...register("title")} className={styles.input} defaultValue={data.data.attributes.title}/>
+                <input
+                    {...register("title", {
+                        onChange: () => setSubmitError(null)
+                    })}
+                    className={`${styles.input} ${errors.title ? styles.inputError : ''}`}
+                    aria-invalid={!!errors.title}
+                    disabled={isSubmitting}
+                />
+                {errors.title && <span className={styles.fieldError}>{errors.title.message}</span>}
             </p>
             <p className={styles.field}>
-                <textarea {...register("description")} className={styles.textarea}
-                          defaultValue={data.data.attributes.description!}/>
+                <textarea
+                    {...register("description", {
+                        onChange: () => setSubmitError(null)
+                    })}
+                    className={`${styles.textarea} ${errors.description ? styles.inputError : ''}`}
+                    aria-invalid={!!errors.description}
+                    disabled={isSubmitting}
+                />
+                {errors.description && <span className={styles.fieldError}>{errors.description.message}</span>}
             </p>
-            <button className={styles.submitButton} type={"submit"}>Save</button>
+            <button className={styles.submitButton} type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save"}
+            </button>
         </form>
     </div>
 }

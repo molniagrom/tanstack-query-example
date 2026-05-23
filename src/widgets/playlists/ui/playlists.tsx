@@ -4,6 +4,7 @@ import styles from './playlists.module.css'
 import {Pagination} from "../../../shared/ui/pagination";
 import {useState} from "react";
 import {DeletePlaylist} from "../../../features/playlist/delete-playlist/ui/delete-playlist.tsx";
+import {playlistsKeys} from "../../../shared/api/keys-factories/playlists-keys-factory.ts";
 
 type Props = {
     userId?: string
@@ -15,7 +16,12 @@ export const Playlists = ({userId, onPlaylistSelected, isSearchActive}: Props) =
     const [page, setPage] = useState<number>(1)
     const [search, setSearch] = useState<string>("")
 
-    const key = userId ? ['playlists', 'my', userId] : ['playlists', {search, page}]
+    const key = userId ? playlistsKeys.myList() : playlistsKeys.list({
+        pageNumber: page,
+        search,
+        userId
+    })
+
     const queryParams = userId ? {
         userId,
     } : {
