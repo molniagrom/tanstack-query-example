@@ -1,6 +1,7 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {client} from "../../../../shared/api/client.ts";
 import type {SchemaGetMyPlaylistsOutput, SchemaGetPlaylistsOutput} from "../../../../shared/api/schema.ts";
+import {playlistsKeys} from "../../../../shared/api/keys-factories/playlists-keys-factory.ts";
 
 export const useDeleteMutation = () => {
     const queryClient = useQueryClient()
@@ -18,7 +19,7 @@ export const useDeleteMutation = () => {
 
         onSuccess: (_, playlistId) => {
             queryClient.setQueriesData<SchemaGetPlaylistsOutput | SchemaGetMyPlaylistsOutput>(
-                {queryKey: ['playlists']},
+                {queryKey: playlistsKeys.lists()},
                 olddata => {
                     if (!olddata) {
                         return olddata
@@ -30,11 +31,6 @@ export const useDeleteMutation = () => {
                     }
                 }
             )
-
-            // queryClient.invalidateQueries({
-            //     queryKey: ['playlists'],
-            //     refetchType: 'all'
-            // })
         }
     })
 }

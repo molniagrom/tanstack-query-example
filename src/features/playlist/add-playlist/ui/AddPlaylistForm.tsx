@@ -1,8 +1,7 @@
 import styles from './AddPlaylistForm.module.css'
 import {useForm} from "react-hook-form";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {client} from "../../../../shared/api/client.ts";
 import type {SchemaCreatePlaylistRequestPayload} from "../../../../shared/api/schema.ts";
+import {useAddPlaylistMutation} from "../api/addPlaylistMutation.ts";
 
 type AddPlaylistFormValues = {
     title: string
@@ -13,38 +12,21 @@ export const AddPlaylistForm = () => {
 
     const {handleSubmit, register} = useForm<AddPlaylistFormValues>()
 
-    const queryClient = useQueryClient()
 
-    const {mutate} = useMutation({
-        mutationFn: async (values: AddPlaylistFormValues) => {
-            const payload = {
-                data: {
-                    type: "playlists",
-                    attributes: {
-                        title: values.title.trim(),
-                        description: values.description.trim() || null,
-                        type: "public",
-                    }
-                }
-            }
-
-            const response = await client.POST("/playlists", {
-                body: payload as unknown as SchemaCreatePlaylistRequestPayload
-            })
-
-            return response.data
-        },
-
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['playlists'],
-                refetchType: "all"
-            })
-        }
-    })
+    const {mutate} = useAddPlaylistMutation()
 
     const onSubmit = (values: AddPlaylistFormValues) => {
-        mutate(values)
+        const payload: SchemaCreatePlaylistRequestPayload = {
+            data: {
+                type: "playlists",
+                attributes: {
+                    title: values.title.trim(),
+                    description: values.description.trim() || null,
+                }
+            }
+        }
+
+        mutate(payload)
     }
 
     return <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>

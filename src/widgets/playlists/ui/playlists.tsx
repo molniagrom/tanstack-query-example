@@ -1,10 +1,8 @@
-import {keepPreviousData, useQuery} from '@tanstack/react-query'
-import {client} from '../../../shared/api/client.ts'
 import styles from './playlists.module.css'
 import {Pagination} from "../../../shared/ui/pagination";
 import {useState} from "react";
 import {DeletePlaylist} from "../../../features/playlist/delete-playlist/ui/delete-playlist.tsx";
-import {playlistsKeys} from "../../../shared/api/keys-factories/playlists-keys-factory.ts";
+import {usePlaylistsQuery} from "../api/use-playlists-query.ts";
 
 type Props = {
     userId?: string
@@ -13,39 +11,10 @@ type Props = {
 }
 
 export const Playlists = ({userId, onPlaylistSelected, isSearchActive}: Props) => {
-    const [page, setPage] = useState<number>(1)
+    const [pageNumber, setPageNumber] = useState<number>(1)
     const [search, setSearch] = useState<string>("")
 
-    const key = userId ? playlistsKeys.myList() : playlistsKeys.list({
-        pageNumber: page,
-        search,
-        userId
-    })
-
-    const queryParams = userId ? {
-        userId,
-    } : {
-        pageNumber: page,
-        search,
-        userId
-    }
-
-    const query = useQuery({
-        queryKey: key,
-        queryFn: async ({signal}) => {
-            const response = await client.GET('/playlists', {
-                params: {
-                    query: queryParams
-                },
-                signal
-            })
-            if (response.error) {
-                throw (response as unknown as { error: Error }).error;
-            }
-            return response.data;
-        },
-        placeholderData: keepPreviousData
-    })
+    const query = usePlaylistsQuery(userId, {search, pageNumber})
 
     const playlists = query.data?.data ?? []
 
@@ -83,8 +52,8 @@ export const Playlists = ({userId, onPlaylistSelected, isSearchActive}: Props) =
                 </div>
             )}
             <Pagination pagesCount={query.data.meta.pagesCount}
-                        currentPage={page}
-                        onPageNumberChange={setPage}
+                        currentPage={pageNumber}
+                        onPageNumberChange={setPageNumber}
                         isFetching={query.isFetching}
             />
             <div className={styles.statusRow}>

@@ -1,7 +1,7 @@
 import styles from './EditPlaylistForm.module.css'
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {z} from "zod";
 import {client} from "../../../../shared/api/client.ts";
 import type {
@@ -9,6 +9,7 @@ import type {
     SchemaGetPlaylistsOutput,
     SchemaUpdatePlaylistRequestPayload
 } from "../../../../shared/api/schema.ts";
+import {usePlaylistQuery} from "../api/use-playlist-query.tsx";
 
 const editPlaylistSchema = z.object({
     title: z
@@ -53,20 +54,7 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
         clearErrors()
     }, [playlistId, reset, clearErrors]);
 
-    const {data, isPending, isError} = useQuery({
-        queryKey: ['playlists', 'details', playlistId],
-        queryFn: async () => {
-            const response = await client.GET("/playlists/{playlistId}", {
-                params: {
-                    path: {
-                        playlistId: playlistId!
-                    }
-                }
-            })
-            return response.data!
-        },
-        enabled: !!playlistId,
-    })
+    const {data, isPending, isError} = usePlaylistQuery(playlistId)
 
     useEffect(() => {
         if (!data?.data.attributes) return
