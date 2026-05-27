@@ -9,10 +9,9 @@ import {playlistsKeys} from "../../../../shared/api/keys-factories/playlists-key
 
 export const useUpdatePlaylistMutation = (playlistId: string | null) => {
     const queryClient = useQueryClient()
-    const key = playlistsKeys.myList()
 
     return useMutation({
-        mutationFn: async (payload: SchemaUpdatePlaylistRequestPayload) => {
+        mutationFn: async (data: SchemaUpdatePlaylistRequestPayload) => {
             if (!playlistId) {
                 throw new Error("playlistId is required");
             }
@@ -21,30 +20,36 @@ export const useUpdatePlaylistMutation = (playlistId: string | null) => {
                 params: {
                     path: {playlistId}
                 },
-                body: payload
+                body: data
             })
 
             return response.data
         },
 
-        onSuccess: (_data, payload) => {
-            queryClient.setQueryData<SchemaGetPlaylistOutput>(key, prevData => {
-                if (!prevData) {
-                    return prevData
-                }
+        onSuccess: (_response, variables) => {
+            if (!playlistId) {
+                return
+            }
 
-                return {
-                    ...prevData,
-                    data: {
-                        ...prevData.data,
-                        attributes: {
-                            ...prevData.data.attributes,
-                            description: payload.data.attributes.description,
-                            title: payload.data.attributes.title,
+            queryClient.setQueryData<SchemaGetPlaylistOutput>(
+                playlistsKeys.detail(playlistId),
+                prevData => {
+                    if (!prevData) {
+                        return prevData
+                    }
+
+                    return {
+                        ...prevData,
+                        data: {
+                            ...prevData.data,
+                            attributes: {
+                                ...prevData.data.attributes,
+                                description: variables.data.attributes.description,
+                                title: variables.data.attributes.title,
+                            }
                         }
                     }
-                }
-            })
+                })
 
             queryClient.setQueriesData<SchemaGetPlaylistsOutput>(
                 {queryKey: ['playlists']},
@@ -64,20 +69,27 @@ export const useUpdatePlaylistMutation = (playlistId: string | null) => {
                                 ...playlist,
                                 attributes: {
                                     ...playlist.attributes,
-                                    description: payload.data.attributes.description,
-                                    title: payload.data.attributes.title,
+                                    description: variables.data.attributes.description,
+                                    title: variables.data.attributes.title,
                                 }
                             }
                         })
                     }
                 }
             )
-
-            onClose()
+        },
+        onSettled: () => {
             void queryClient.invalidateQueries({
-                queryKey: ['playlists'],
+                queryKey: playlistsKeys.lists(),
                 refetchType: "all"
             })
-        },
+
+            if (playlistId) {
+                void queryClient.invalidateQueries({
+                    queryKey: playlistsKeys.detail(playlistId),
+                    refetchType: "all"
+                })
+            }
+        }
     })
 }
