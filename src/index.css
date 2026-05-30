@@ -1,20 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@600;700;800&display=swap");
+
 :root {
-  font-family: Inter, "Segoe UI", sans-serif;
-  background: #f5f5f3;
-  color: #18181b;
+  font-family: "Merriweather", Georgia, serif;
+  background: #fbf6ee;
+  color: #2a1c18;
 }
 
 html {
-  background: #f5f5f3;
+  background:
+    radial-gradient(circle at top, rgba(229, 169, 60, 0.12), transparent 28%),
+    radial-gradient(circle at 80% 12%, rgba(15, 44, 89, 0.06), transparent 18%),
+    linear-gradient(180deg, #fdf8ef 0%, #fbf6ee 36%, #f7f0e2 100%);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.9), transparent 32%),
-    #f5f5f3;
-  color: #18181b;
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.72), transparent 30%),
+    radial-gradient(circle at 20% 0%, rgba(229, 169, 60, 0.1), transparent 24%),
+    radial-gradient(circle at 82% 18%, rgba(15, 44, 89, 0.05), transparent 16%),
+    linear-gradient(180deg, #fdf8ef 0%, #fbf6ee 38%, #f4ead8 100%);
+  background-attachment: fixed;
+  color: #2a1c18;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(62, 39, 35, 0.018) 0,
+      rgba(62, 39, 35, 0.018) 1px,
+      transparent 1px,
+      transparent 120px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(62, 39, 35, 0.014) 0,
+      rgba(62, 39, 35, 0.014) 1px,
+      transparent 1px,
+      transparent 98px
+    ),
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.32), transparent 36%);
+  mix-blend-mode: multiply;
+  opacity: 0.45;
 }
 
 a {

@@ -46,12 +46,12 @@ export function MyPlaylistsPage() {
                 </button>
             </div>
 
-            <hr/>
+            <div className={styles.divider} aria-hidden="true"/>
             <AddPlaylistForm
                 isOpen={isAddPlaylistOpen}
                 onClose={() => setIsAddPlaylistOpen(false)}
             />
-            <hr/>
+            <div className={styles.divider} aria-hidden="true"/>
             <EditPlaylistForm
                 key={editingPlaylistId ?? 'closed'}
                 playlistId={editingPlaylistId}

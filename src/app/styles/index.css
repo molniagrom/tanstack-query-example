@@ -1,21 +1,34 @@
 :root {
-  --bg: #f5f5f3;
-  --surface: rgba(255, 255, 255, 0.82);
-  --surface-strong: #ffffff;
-  --surface-muted: #f0f0ec;
-  --border: rgba(24, 24, 27, 0.08);
-  --text: #52525b;
-  --text-strong: #18181b;
-  --text-soft: #71717a;
-  --shadow: 0 18px 40px rgba(24, 24, 27, 0.06);
+  --royal: #0f2c59;
+  --gold: #e5a93c;
+  --gold-soft: #f7d98c;
+  --crimson: #8b0000;
+  --bg: #fbf6ee;
+  --surface: rgba(255, 249, 238, 0.92);
+  --surface-strong: #fffaf2;
+  --surface-muted: #f2e6cf;
+  --surface-warm: #f6eddc;
+  --border: rgba(62, 39, 35, 0.18);
+  --border-strong: rgba(62, 39, 35, 0.28);
+  --steel: #718096;
+  --leather: #3e2723;
+  --text: #5a463d;
+  --text-strong: #2a1c18;
+  --text-soft: #7a655b;
+  --success: #4f7d43;
+  --success-soft: rgba(79, 125, 67, 0.12);
+  --danger: #8b0000;
+  --danger-soft: rgba(139, 0, 0, 0.1);
+  --shadow: 0 18px 38px rgba(62, 39, 35, 0.09);
+  --shadow-strong: 0 30px 70px rgba(62, 39, 35, 0.14);
   --radius-lg: 24px;
   --radius-md: 16px;
   --radius-sm: 12px;
   --page-width: 960px;
   --page-gutter: 24px;
 
-  font: 16px/1.5 Inter, "Segoe UI", sans-serif;
-  letter-spacing: -0.01em;
+  font: 16px/1.6 "Merriweather", Georgia, serif;
+  letter-spacing: -0.008em;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -37,8 +50,9 @@ h2,
 h3 {
   margin: 0;
   color: var(--text-strong);
+  font-family: "Playfair Display", Georgia, serif;
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 h1 {
@@ -60,4 +74,13 @@ input,
 textarea,
 select {
   color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(229, 169, 60, 0.28);
+  color: var(--leather);
 }

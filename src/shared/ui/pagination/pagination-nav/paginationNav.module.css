@@ -9,9 +9,10 @@
   min-width: 40px;
   height: 40px;
   padding: 0 12px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(62, 39, 35, 0.16);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 242, 0.96), rgba(242, 230, 206, 0.94));
   color: var(--text-soft);
   font-size: 0.92rem;
   font-weight: 500;
@@ -24,8 +25,9 @@
 }
 
 .pageButton:hover:not(:disabled) {
-  background: var(--surface-strong);
-  color: var(--text-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 245, 1), rgba(246, 224, 173, 0.98));
+  color: var(--royal);
 }
 
 .pageButton:disabled {
@@ -33,10 +35,13 @@
 }
 
 .pageButtonActive {
-  background: var(--surface-strong);
-  color: var(--text-strong);
-  border-color: var(--border);
-  box-shadow: 0 10px 20px rgba(24, 24, 27, 0.05);
+  background:
+    linear-gradient(180deg, rgba(255, 249, 232, 1), rgba(229, 169, 60, 0.18));
+  color: var(--leather);
+  border-color: rgba(229, 169, 60, 0.42);
+  box-shadow:
+    0 10px 20px rgba(62, 39, 35, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
 .ellipsis {

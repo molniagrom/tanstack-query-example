@@ -26,7 +26,7 @@ export const AddPlaylistForm = ({isOpen, onClose}: Props) => {
             return error.message
         }
 
-        return "Could not create playlist. Please try again."
+        return "Ambush by the Cardinal's guards! Please try again."
     }
 
     const onSubmit = async (values: AddPlaylistFormValues) => {

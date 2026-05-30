@@ -11,10 +11,11 @@
   justify-content: center;
   min-height: 40px;
   padding: 0 16px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(229, 169, 60, 0.28);
   border-radius: 999px;
-  background: var(--surface-strong);
-  color: var(--text-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 241, 0.98), rgba(243, 229, 195, 0.96));
+  color: var(--leather);
   font-size: 0.92rem;
   font-weight: 500;
   cursor: pointer;
@@ -26,7 +27,8 @@
 }
 
 .loginButton:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 244, 1), rgba(247, 227, 178, 0.98));
 }
 
 .loginButton:disabled {
@@ -38,9 +40,10 @@
   display: inline-flex;
   align-items: stretch;
   min-width: 0;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(62, 39, 35, 0.16);
   border-radius: 999px;
-  background: var(--surface-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 250, 243, 0.98), rgba(246, 234, 210, 0.96));
   overflow: hidden;
 }
 
@@ -52,7 +55,7 @@
   padding: 0 14px;
   background: transparent;
   border: 0;
-  color: var(--text-strong);
+  color: var(--royal);
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 500;
@@ -64,7 +67,7 @@
 }
 
 .userLink:hover {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 248, 228, 0.82);
 }
 
 .logoutButton {
@@ -74,9 +77,9 @@
   min-height: 40px;
   padding: 0 16px;
   border: 0;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid rgba(62, 39, 35, 0.16);
   background: transparent;
-  color: var(--text-strong);
+  color: var(--crimson);
   font-size: 0.92rem;
   font-weight: 500;
   white-space: nowrap;
@@ -88,7 +91,7 @@
 }
 
 .logoutButton:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(139, 0, 0, 0.08);
 }
 
 .logoutButton:disabled {

@@ -26,7 +26,7 @@ export const Playlists = ({userId, onPlaylistSelected, onPlaylistDeleted, isSear
     if (query.isError) {
         return (
             <div className={`${styles.stateCard} ${styles.stateCardError}`}>
-                Error: {query.error.message}
+                Ambush by the Cardinal's guards! {query.error.message}
             </div>
         )
     }

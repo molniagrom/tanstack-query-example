@@ -5,10 +5,11 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid rgba(220, 38, 38, 0.18);
+  border: 1px solid rgba(139, 0, 0, 0.2);
   border-radius: 999px;
-  background: rgba(254, 242, 242, 0.92);
-  color: #dc2626;
+  background:
+    linear-gradient(180deg, rgba(255, 244, 237, 0.96), rgba(236, 201, 190, 0.9));
+  color: var(--crimson);
   font-size: 1rem;
   line-height: 1;
   cursor: pointer;
@@ -20,12 +21,13 @@
 }
 
 .button:hover {
-  background: rgba(254, 226, 226, 0.98);
-  border-color: rgba(220, 38, 38, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 247, 243, 1), rgba(242, 185, 170, 0.98));
+  border-color: rgba(139, 0, 0, 0.3);
   transform: translateY(-1px);
 }
 
 .button:focus-visible {
-  outline: 2px solid rgba(220, 38, 38, 0.28);
+  outline: 2px solid rgba(139, 0, 0, 0.28);
   outline-offset: 2px;
 }

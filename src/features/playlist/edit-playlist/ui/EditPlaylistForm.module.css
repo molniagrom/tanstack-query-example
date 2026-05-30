@@ -6,8 +6,8 @@
   place-items: center;
   padding: 24px;
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.14), transparent 36%),
-    rgba(15, 23, 42, 0.58);
+    radial-gradient(circle at top, rgba(229, 169, 60, 0.12), transparent 36%),
+    rgba(37, 25, 20, 0.64);
   backdrop-filter: blur(10px);
 }
 
@@ -17,12 +17,13 @@
   gap: 16px;
   width: min(100%, 560px);
   padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(62, 39, 35, 0.18);
   border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.94));
+    radial-gradient(circle at top left, rgba(229, 169, 60, 0.09), transparent 28%),
+    linear-gradient(180deg, rgba(255, 251, 242, 0.98), rgba(244, 233, 210, 0.95));
   box-shadow:
-    0 24px 80px rgba(15, 23, 42, 0.28),
+    0 24px 80px rgba(37, 25, 20, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
@@ -36,10 +37,10 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid rgba(148, 163, 184, 0.24);
+  border: 1px solid rgba(113, 128, 150, 0.24);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.84);
-  color: #0f172a;
+  background: rgba(255, 250, 240, 0.92);
+  color: var(--leather);
   font-size: 1.25rem;
   line-height: 1;
   cursor: pointer;
@@ -50,13 +51,13 @@
 }
 
 .closeButton:hover {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(15, 23, 42, 0.16);
+  background: rgba(255, 249, 233, 0.98);
+  border-color: rgba(229, 169, 60, 0.3);
   transform: translateY(-1px);
 }
 
 .closeButton:focus-visible {
-  outline: 2px solid rgba(37, 99, 235, 0.24);
+  outline: 2px solid rgba(229, 169, 60, 0.24);
   outline-offset: 2px;
 }
 
@@ -72,7 +73,7 @@
 .fieldError {
   display: block;
   margin-top: 8px;
-  color: #b91c1c;
+  color: var(--crimson);
   font-size: 0.88rem;
   line-height: 1.4;
 }
@@ -80,9 +81,9 @@
 .input,
 .textarea {
   width: 100%;
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  border: 1px solid rgba(113, 128, 150, 0.3);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 252, 245, 0.94);
   color: var(--text-strong);
   font: inherit;
   transition:
@@ -110,21 +111,21 @@
 .input:focus,
 .textarea:focus {
   outline: none;
-  border-color: rgba(37, 99, 235, 0.42);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  border-color: rgba(229, 169, 60, 0.42);
+  box-shadow: 0 0 0 4px rgba(229, 169, 60, 0.12);
 }
 
 .inputError {
-  border-color: rgba(185, 28, 28, 0.48);
-  box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.1);
+  border-color: rgba(139, 0, 0, 0.48);
+  box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.1);
 }
 
 .submitError {
   padding: 12px 14px;
-  border: 1px solid rgba(185, 28, 28, 0.2);
+  border: 1px solid rgba(139, 0, 0, 0.2);
   border-radius: 16px;
-  background: rgba(254, 242, 242, 0.96);
-  color: #991b1b;
+  background: linear-gradient(180deg, rgba(255, 243, 240, 0.98), rgba(245, 220, 213, 0.94));
+  color: var(--crimson);
   font-size: 0.93rem;
   line-height: 1.45;
 }
@@ -136,10 +137,10 @@
   justify-content: center;
   min-height: 46px;
   padding: 0 20px;
-  border: 1px solid rgba(30, 41, 59, 0.08);
+  border: 1px solid rgba(126, 89, 20, 0.7);
   border-radius: 999px;
-  background: linear-gradient(135deg, #0f172a, #334155);
-  color: #f8fafc;
+  background: linear-gradient(180deg, #f9e5a7 0%, #e5a93c 52%, #c98b1d 100%);
+  color: #3e2723;
   font-size: 0.94rem;
   font-weight: 600;
   cursor: pointer;
@@ -151,7 +152,7 @@
 }
 
 .submitButton:hover {
-  background: linear-gradient(135deg, #111827, #1e293b);
+  background: linear-gradient(180deg, #fdf0bf 0%, #efbe50 52%, #d19118 100%);
 }
 
 .submitButton:active {
@@ -164,6 +165,11 @@
 .textarea:disabled {
   cursor: not-allowed;
   opacity: 0.72;
+}
+
+.submitButton:focus-visible {
+  outline: 2px solid rgba(229, 169, 60, 0.24);
+  outline-offset: 2px;
 }
 
 .statusCard {

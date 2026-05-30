@@ -49,7 +49,7 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
             return error.message
         }
 
-        return "Could not save the playlist. Please try again."
+        return "Ambush by the Cardinal's guards! Please try again."
     }
 
     const submit = async (values: EditPlaylistFormValues) => {
@@ -57,7 +57,7 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
         clearErrors()
 
         if (!playlistId) {
-            setSubmitError("Could not save the playlist: playlistId is missing.")
+            setSubmitError("Ambush by the Cardinal's guards! playlistId is missing.")
             return
         }
 

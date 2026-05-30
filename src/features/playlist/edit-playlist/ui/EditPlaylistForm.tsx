@@ -28,7 +28,7 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
 
     if (playlistQuery.isError) {
         return <div className={styles.overlay}>
-            <div className={styles.statusCard}>Some Error...</div>
+            <div className={styles.statusCard}>Ambush by the Cardinal&apos;s guards!</div>
         </div>
     }
 
