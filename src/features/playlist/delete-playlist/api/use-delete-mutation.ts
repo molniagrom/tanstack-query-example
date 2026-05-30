@@ -29,8 +29,9 @@ export const useDeleteMutation = () => {
                         ...olddata,
                         data: olddata.data.filter(p => p.id !== playlistId)
                     }
-                }
-            )
+                })
+
+            queryClient.removeQueries({queryKey: playlistsKeys.detail(playlistId)})
         }
     })
 }

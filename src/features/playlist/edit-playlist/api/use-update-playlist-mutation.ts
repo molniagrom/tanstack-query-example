@@ -7,11 +7,15 @@ import type {
 import {client} from "../../../../shared/api/client.ts";
 import {playlistsKeys} from "../../../../shared/api/keys-factories/playlists-keys-factory.ts";
 
-export const useUpdatePlaylistMutation = (playlistId: string | null) => {
+type MutationVariables = SchemaUpdatePlaylistRequestPayload & {playlistId: string}
+
+export const useUpdatePlaylistMutation = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: async (data: SchemaUpdatePlaylistRequestPayload) => {
+        mutationFn: async (data: MutationVariables) => {
+
+            const {playlistId, ...rest} = data
             if (!playlistId) {
                 throw new Error("playlistId is required");
             }
@@ -20,19 +24,19 @@ export const useUpdatePlaylistMutation = (playlistId: string | null) => {
                 params: {
                     path: {playlistId}
                 },
-                body: data
+                body: {...rest, tegIds: []}
             })
 
             return response.data
         },
 
-        onSuccess: (_response, variables) => {
-            if (!playlistId) {
+        onSuccess: (_response, variables: MutationVariables) => {
+            if (!variables.playlistId) {
                 return
             }
 
             queryClient.setQueryData<SchemaGetPlaylistOutput>(
-                playlistsKeys.detail(playlistId),
+                playlistsKeys.detail(variables.playlistId),
                 prevData => {
                     if (!prevData) {
                         return prevData
@@ -61,7 +65,7 @@ export const useUpdatePlaylistMutation = (playlistId: string | null) => {
                     return {
                         ...prevData,
                         data: prevData.data.map(playlist => {
-                            if (playlist.id !== playlistId) {
+                            if (playlist.id !== variables.playlistId) {
                                 return playlist
                             }
 
@@ -78,15 +82,15 @@ export const useUpdatePlaylistMutation = (playlistId: string | null) => {
                 }
             )
         },
-        onSettled: () => {
+        onSettled: (_data, _error, variables: MutationVariables) => {
             void queryClient.invalidateQueries({
                 queryKey: playlistsKeys.lists(),
                 refetchType: "all"
             })
 
-            if (playlistId) {
+            if (variables.playlistId) {
                 void queryClient.invalidateQueries({
-                    queryKey: playlistsKeys.detail(playlistId),
+                    queryKey: playlistsKeys.detail(variables.playlistId),
                     refetchType: "all"
                 })
             }

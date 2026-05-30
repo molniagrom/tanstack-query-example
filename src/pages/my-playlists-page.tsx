@@ -10,6 +10,7 @@ import {EditPlaylistForm} from "../features/playlist/edit-playlist/ui/EditPlayli
 export function MyPlaylistsPage() {
 
     const {data, isPending} = useMeQuery()
+    const [isAddPlaylistOpen, setIsAddPlaylistOpen] = useState(false)
     const [editingPlaylistId, setEditingPlaylistId] = useState<string | null>(null)
 
     if (isPending) {
@@ -20,25 +21,48 @@ export function MyPlaylistsPage() {
         return <Navigate to={"/"} replace/>
     }
 
+    const handlePlaylistDelete = ( playlistId: string ) => {
+        if (playlistId === editingPlaylistId) {
+            setEditingPlaylistId(null)
+        }
+    }
+
     return (
         <section className={styles.shell}>
             <div className={styles.hero}>
-                <span className={styles.eyebrow}>Library</span>
-                <h2>My playlists</h2>
-                <p className={styles.description}>
-                    Same structure, same rhythm, no extra decoration. Just a neat page shell for personal collections.
-                </p>
+                <div className={styles.heroContent}>
+                    <span className={styles.eyebrow}>Library</span>
+                    <h2>My playlists</h2>
+                    <p className={styles.description}>
+                        Same structure, same rhythm, no extra decoration. Just a neat page shell for personal collections.
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    className={styles.heroButton}
+                    onClick={() => setIsAddPlaylistOpen(true)}
+                >
+                    + add playlist
+                </button>
             </div>
 
             <hr/>
-            <AddPlaylistForm/>
+            <AddPlaylistForm
+                isOpen={isAddPlaylistOpen}
+                onClose={() => setIsAddPlaylistOpen(false)}
+            />
             <hr/>
             <EditPlaylistForm
                 key={editingPlaylistId ?? 'closed'}
                 playlistId={editingPlaylistId}
                 onClose={() => setEditingPlaylistId(null)}
             />
-            <Playlists userId={data.userId} onPlaylistSelected={setEditingPlaylistId}/>
+            <Playlists
+                userId={data.userId}
+                onPlaylistSelected={(playlistId) => setEditingPlaylistId(playlistId)}
+                onPlaylistDeleted={handlePlaylistDelete}
+
+            />
         </section>
     )
 }

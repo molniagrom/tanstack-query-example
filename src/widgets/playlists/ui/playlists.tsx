@@ -7,10 +7,11 @@ import {usePlaylistsQuery} from "../api/use-playlists-query.ts";
 type Props = {
     userId?: string
     onPlaylistSelected?: (playlistId: string) => void
+    onPlaylistDeleted?: (playlistId: string) => void
     isSearchActive?: boolean
 }
 
-export const Playlists = ({userId, onPlaylistSelected, isSearchActive}: Props) => {
+export const Playlists = ({userId, onPlaylistSelected, onPlaylistDeleted, isSearchActive}: Props) => {
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [search, setSearch] = useState<string>("")
 
@@ -32,6 +33,9 @@ export const Playlists = ({userId, onPlaylistSelected, isSearchActive}: Props) =
 
     const handleSelectPlaylistClick = (playlistId: string) => {
         onPlaylistSelected?.(playlistId)
+    }
+    const handleDeletePlaylistClick = (playlistId: string) => {
+        onPlaylistDeleted?.(playlistId)
     }
 
     if (playlists.length === 0) {
@@ -99,7 +103,7 @@ export const Playlists = ({userId, onPlaylistSelected, isSearchActive}: Props) =
                                 >
                                     ✏️
                                 </button>
-                                <DeletePlaylist playlistId={playlist.id}/>
+                                <DeletePlaylist playlistId={playlist.id} onDelete={handleDeletePlaylistClick}/>
                             </div>
                             <span className={styles.badge}>#{playlist.attributes.order}</span>
                         </li>

@@ -42,7 +42,7 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
         })
     }, [playlistQuery.data, reset])
 
-    const {mutateAsync} = useUpdatePlaylistMutation(playlistId)
+    const {mutateAsync} = useUpdatePlaylistMutation()
 
     const getErrorMessage = (error: unknown) => {
         if (error instanceof Error && error.message) {
@@ -90,7 +90,10 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
         }
 
         try {
-            await mutateAsync(payload)
+            await mutateAsync({
+                playlistId,
+                ...payload,
+            })
             onClose()
         } catch (error) {
             setSubmitError(getErrorMessage(error))

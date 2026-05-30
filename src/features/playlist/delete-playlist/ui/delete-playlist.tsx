@@ -3,13 +3,15 @@ import styles from "./delete-playlist.module.css";
 
 type Props = {
     playlistId: string
+    onDelete: (playlistId: string) => void
 }
 
-export const DeletePlaylist = ({playlistId}: Props) => {
+export const DeletePlaylist = ({playlistId, onDelete}: Props) => {
     const {mutate} = useDeleteMutation();
 
     const handleDeleteClick = () => {
         mutate(playlistId);
+        onDelete?.(playlistId)
     }
 
     return (
