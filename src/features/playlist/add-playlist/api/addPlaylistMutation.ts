@@ -11,7 +11,15 @@ export const useAddPlaylistMutation = () => {
             const response = await client.POST('/playlists', {
                 body: data
             })
+
+            if (response.error) {
+                throw response.error
+            }
+
             return response.data;
+        },
+        meta: {
+            globalErrorHandler: "off",
         },
         onSuccess: () => {
             queryClient.invalidateQueries({

@@ -60,7 +60,8 @@ const authMyMiddleware: Middleware = {
   async onResponse({ request, response }) {
     if (response.ok) return response
     if (!response.ok && response.status !== 401) {
-      throw new Error(`${response.url}: ${response.status} ${response.statusText}`)
+      const errorBody = await response.json()
+      throw errorBody
     }
 
     try {

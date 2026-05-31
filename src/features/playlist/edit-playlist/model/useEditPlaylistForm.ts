@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
-import {useForm} from "react-hook-form";
+import {type Path, useForm} from "react-hook-form";
 import type {SchemaUpdatePlaylistRequestPayload} from "../../../../shared/api/schema.ts";
 import {usePlaylistQuery} from "../api/use-playlist-query.tsx";
 import {useUpdatePlaylistMutation} from "../api/use-update-playlist-mutation.ts";
 import {type EditPlaylistFormValues, validateEditPlaylistForm} from "../ui/edit-playlist-form.validation.ts";
+import {queryErrorHandlerForRHFFactory} from "../../../../shared/api/query-error-handlers.ts";
 
 type UseEditPlaylistFormArgs = {
     playlistId: string | null
@@ -43,14 +44,7 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
     }, [playlistQuery.data, reset])
 
     const {mutateAsync} = useUpdatePlaylistMutation()
-
-    const getErrorMessage = (error: unknown) => {
-        if (error instanceof Error && error.message) {
-            return error.message
-        }
-
-        return "Ambush by the Cardinal's guards! Please try again."
-    }
+    const handleServerError = queryErrorHandlerForRHFFactory<EditPlaylistFormValues>({setError})
 
     const submit = async (values: EditPlaylistFormValues) => {
         setSubmitError(null)
@@ -96,17 +90,27 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
             })
             onClose()
         } catch (error) {
-            setSubmitError(getErrorMessage(error))
+            if (handleServerError(error)) {
+                return
+            }
+
+            setError("root.server" as Path<EditPlaylistFormValues>, {
+                type: "server",
+                message: "Ambush by the Cardinal's guards! Please try again.",
+            })
         }
     }
 
     return {
         playlistQuery,
-        submitError,
+        submitError: errors.root?.server?.message ?? submitError,
         register,
         errors,
         isSubmitting,
         onSubmit: handleSubmit(submit),
-        clearSubmitError: () => setSubmitError(null),
+        clearSubmitError: () => {
+            setSubmitError(null)
+            clearErrors("root")
+        },
     }
 }

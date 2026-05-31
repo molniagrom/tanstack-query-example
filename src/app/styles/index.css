@@ -84,3 +84,22 @@ button {
   background: rgba(229, 169, 60, 0.28);
   color: var(--leather);
 }
+
+.musketeerToast {
+  border: 1px solid rgba(139, 0, 0, 0.24);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at top left, rgba(229, 169, 60, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(255, 251, 242, 0.98), rgba(244, 233, 210, 0.96));
+  color: var(--leather);
+  box-shadow:
+    0 18px 38px rgba(62, 39, 35, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.musketeerToast .Toastify__toast-body {
+  color: var(--crimson);
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}

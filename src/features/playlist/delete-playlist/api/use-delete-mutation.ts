@@ -14,6 +14,10 @@ export const useDeleteMutation = () => {
                 }
             });
 
+            if (response.error) {
+                throw response.error
+            }
+
             return response.data;
         },
 

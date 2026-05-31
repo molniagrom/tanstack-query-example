@@ -1,8 +1,8 @@
 import styles from './AddPlaylistForm.module.css'
-import {useState} from "react";
-import {useForm} from "react-hook-form";
+import {type Path, useForm} from "react-hook-form";
 import type {SchemaCreatePlaylistRequestPayload} from "../../../../shared/api/schema.ts";
 import {useAddPlaylistMutation} from "../api/addPlaylistMutation.ts";
+import {queryErrorHandlerForRHFFactory} from "../../../../shared/api/query-error-handlers.ts";
 
 type AddPlaylistFormValues = {
     title: string
@@ -15,22 +15,20 @@ type Props = {
 }
 
 export const AddPlaylistForm = ({isOpen, onClose}: Props) => {
-    const [submitError, setSubmitError] = useState<string | null>(null)
-
-    const {handleSubmit, register, reset, formState: {isSubmitting}} = useForm<AddPlaylistFormValues>()
+    const {
+        handleSubmit,
+        register,
+        reset,
+        setError,
+        clearErrors,
+        formState: {errors, isSubmitting}
+    } = useForm<AddPlaylistFormValues>()
 
     const {mutateAsync} = useAddPlaylistMutation()
-
-    const getErrorMessage = (error: unknown) => {
-        if (error instanceof Error && error.message) {
-            return error.message
-        }
-
-        return "Ambush by the Cardinal's guards! Please try again."
-    }
+    const handleServerError = queryErrorHandlerForRHFFactory<AddPlaylistFormValues>({setError})
 
     const onSubmit = async (values: AddPlaylistFormValues) => {
-        setSubmitError(null)
+        clearErrors()
 
         const payload: SchemaCreatePlaylistRequestPayload = {
             data: {
@@ -47,7 +45,14 @@ export const AddPlaylistForm = ({isOpen, onClose}: Props) => {
             reset()
             onClose()
         } catch (error) {
-            setSubmitError(getErrorMessage(error))
+            if (handleServerError(error)) {
+                return
+            }
+
+            setError("root.server" as Path<AddPlaylistFormValues>, {
+                type: "server",
+                message: "Ambush by the Cardinal's guards! Please try again.",
+            })
         }
     }
 
@@ -75,16 +80,32 @@ export const AddPlaylistForm = ({isOpen, onClose}: Props) => {
                     ×
                 </button>
                 <h2 id="add-playlist-title" className={styles.title}>Add New Playlist</h2>
-                {submitError && (
+                {errors.root?.server?.message && (
                     <div className={styles.submitError} role="alert">
-                        {submitError}
+                        {errors.root.server.message}
                     </div>
                 )}
                 <p className={styles.field}>
-                    <input {...register("title")} className={styles.input} disabled={isSubmitting}/>
+                    <input
+                        {...register("title", {
+                            onChange: () => clearErrors(),
+                        })}
+                        className={`${styles.input} ${errors.title ? styles.inputError : ''}`}
+                        aria-invalid={!!errors.title}
+                        disabled={isSubmitting}
+                    />
+                    {errors.title && <span className={styles.fieldError}>{errors.title.message}</span>}
                 </p>
                 <p className={styles.field}>
-                    <textarea {...register("description")} className={styles.textarea} disabled={isSubmitting}/>
+                    <textarea
+                        {...register("description", {
+                            onChange: () => clearErrors(),
+                        })}
+                        className={`${styles.textarea} ${errors.description ? styles.inputError : ''}`}
+                        aria-invalid={!!errors.description}
+                        disabled={isSubmitting}
+                    />
+                    {errors.description && <span className={styles.fieldError}>{errors.description.message}</span>}
                 </p>
                 <button className={styles.submitButton} type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Creating..." : "Create"}

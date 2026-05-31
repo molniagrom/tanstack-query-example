@@ -27,9 +27,16 @@ export const useUpdatePlaylistMutation = () => {
                 body: {...rest, tegIds: []}
             })
 
+            if (response.error) {
+                throw response.error
+            }
+
             return response.data
         },
 
+        meta: {
+            globalErrorHandler: "off",
+        },
         onSuccess: (_response, variables: MutationVariables) => {
             if (!variables.playlistId) {
                 return
