@@ -9,6 +9,7 @@ import {RouterProvider} from "@tanstack/react-router";
 import {ToastContainer} from "react-toastify";
 import {mutationGlobalErrorHandler} from "../../shared/api/query-error-handlers.ts";
 import {routerInstance} from "../tanstack-router/router-instance.ts";
+import {ThemeProvider} from "../../shared/lib/theme/theme-provider.tsx";
 
 const queryClient = new QueryClient({
     mutationCache: new MutationCache({
@@ -27,17 +28,19 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
-        <RouterProvider router={routerInstance}/>
-        <ToastContainer
-            position="top-right"
-            autoClose={4500}
-            hideProgressBar
-            closeOnClick
-            pauseOnFocusLoss
-            pauseOnHover
-            theme="light"
-            toastClassName="musketeerToast"
-        />
-        <ReactQueryDevtools initialIsOpen={false}/>
+        <ThemeProvider>
+            <RouterProvider router={routerInstance}/>
+            <ToastContainer
+                position="top-right"
+                autoClose={4500}
+                hideProgressBar
+                closeOnClick
+                pauseOnFocusLoss
+                pauseOnHover
+                theme="light"
+                toastClassName="musketeerToast"
+            />
+            <ReactQueryDevtools initialIsOpen={false}/>
+        </ThemeProvider>
     </QueryClientProvider>,
 )

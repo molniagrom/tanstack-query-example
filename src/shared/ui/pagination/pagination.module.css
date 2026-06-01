@@ -46,3 +46,9 @@
     align-items: flex-start;
   }
 }
+
+:global([data-theme="dark"]) .statusBadge {
+  background:
+    linear-gradient(180deg, rgba(58, 43, 35, 0.96), rgba(36, 26, 22, 0.94));
+  border-color: rgba(229, 169, 60, 0.2);
+}

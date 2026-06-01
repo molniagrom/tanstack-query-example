@@ -103,3 +103,19 @@
   color: var(--text-soft);
   font-size: 0.9rem;
 }
+
+:global([data-theme="dark"]) .loginButton,
+:global([data-theme="dark"]) .meInfoContainer {
+  background:
+    linear-gradient(180deg, rgba(58, 43, 35, 0.98), rgba(36, 26, 22, 0.96));
+  color: var(--text-strong);
+  border-color: rgba(229, 169, 60, 0.24);
+}
+
+:global([data-theme="dark"]) .userLink:hover {
+  background: rgba(229, 169, 60, 0.1);
+}
+
+:global([data-theme="dark"]) .logoutButton:hover:not(:disabled) {
+  background: rgba(255, 138, 128, 0.1);
+}

@@ -53,3 +53,18 @@
   color: var(--text-soft);
   font-weight: 600;
 }
+
+:global([data-theme="dark"]) .pageButton,
+:global([data-theme="dark"]) .pageButtonActive {
+  background:
+    linear-gradient(180deg, rgba(58, 43, 35, 0.96), rgba(36, 26, 22, 0.94));
+  border-color: rgba(229, 169, 60, 0.2);
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:global([data-theme="dark"]) .pageButton:hover:not(:disabled) {
+  background:
+    linear-gradient(180deg, rgba(70, 51, 39, 0.98), rgba(43, 31, 25, 0.96));
+}

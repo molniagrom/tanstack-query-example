@@ -184,3 +184,27 @@
     border-radius: 24px 24px 18px 18px;
   }
 }
+
+:global([data-theme="dark"]) .overlay {
+  background:
+    radial-gradient(circle at top, rgba(229, 169, 60, 0.1), transparent 36%),
+    rgba(9, 7, 6, 0.72);
+}
+
+:global([data-theme="dark"]) .form,
+:global([data-theme="dark"]) .closeButton,
+:global([data-theme="dark"]) .input,
+:global([data-theme="dark"]) .textarea {
+  background:
+    linear-gradient(180deg, rgba(58, 43, 35, 0.98), rgba(36, 26, 22, 0.96));
+  border-color: rgba(229, 169, 60, 0.2);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:global([data-theme="dark"]) .submitError {
+  background:
+    linear-gradient(180deg, rgba(74, 30, 28, 0.96), rgba(46, 24, 22, 0.94));
+  border-color: rgba(255, 138, 128, 0.24);
+}

@@ -31,3 +31,15 @@
   outline: 2px solid rgba(139, 0, 0, 0.28);
   outline-offset: 2px;
 }
+
+:global([data-theme="dark"]) .button {
+  background:
+    linear-gradient(180deg, rgba(74, 30, 28, 0.96), rgba(46, 24, 22, 0.94));
+  border-color: rgba(255, 138, 128, 0.24);
+  color: var(--crimson);
+}
+
+:global([data-theme="dark"]) .button:hover {
+  background:
+    linear-gradient(180deg, rgba(90, 36, 32, 0.98), rgba(55, 28, 24, 0.96));
+}
