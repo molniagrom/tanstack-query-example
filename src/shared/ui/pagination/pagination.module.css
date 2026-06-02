@@ -1,9 +1,19 @@
 .container {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.controls {
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.progressBar {
+  width: 100%;
 }
 
 .statusBadge {
@@ -42,7 +52,7 @@
 }
 
 @media (max-width: 640px) {
-  .container {
+  .controls {
     align-items: flex-start;
   }
 }

@@ -1,5 +1,6 @@
 import styles from './pagination.module.css'
 import { PaginationNav } from './pagination-nav'
+import { ProgressBar } from '../progress-bar'
 
 type Props = {
     currentPage: number
@@ -11,14 +12,18 @@ type Props = {
 export const Pagination = ({ currentPage, pagesCount, onPageNumberChange, isFetching }: Props) => {
     return (
         <div className={styles.container}>
-            <PaginationNav current={currentPage} pagesCount={pagesCount} onChange={onPageNumberChange} />
+            {isFetching && <ProgressBar className={styles.progressBar} />}
 
-            {isFetching && (
-                <div className={styles.statusBadge} aria-live="polite">
-                    <span className={styles.statusDot} aria-hidden="true" />
-                    Refreshing
-                </div>
-            )}
+            <div className={styles.controls}>
+                <PaginationNav current={currentPage} pagesCount={pagesCount} onChange={onPageNumberChange} />
+
+                {isFetching && (
+                    <div className={styles.statusBadge} aria-live="polite">
+                        <span className={styles.statusDot} aria-hidden="true" />
+                        Refreshing
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
