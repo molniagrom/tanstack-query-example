@@ -145,7 +145,7 @@
 .item {
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto auto 1fr auto auto;
   align-items: center;
   gap: 16px;
   padding: 18px 20px;
@@ -290,13 +290,13 @@
   }
 
   .item {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto auto 1fr;
     align-items: start;
     padding-left: 24px;
   }
 
   .badge {
-    grid-column: 2 / -1;
+    grid-column: 3 / -1;
     justify-self: flex-start;
   }
 }

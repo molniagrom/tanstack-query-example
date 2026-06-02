@@ -61,7 +61,7 @@ export function MyPlaylistsPage() {
                 userId={data.userId}
                 onPlaylistSelected={(playlistId) => setEditingPlaylistId(playlistId)}
                 onPlaylistDeleted={handlePlaylistDelete}
-
+                isOwner={true}
             />
         </section>
     )

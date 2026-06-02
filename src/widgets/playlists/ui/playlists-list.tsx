@@ -2,11 +2,22 @@ import styles from './playlists.module.css'
 import { PlaylistItem } from './playlist-item'
 import { PlaylistItemSkeleton } from './playlist-item-skeleton'
 
+type ImageVariant = {
+    type: string
+    width: number
+    height: number
+    fileSize: number
+    url: string
+}
+
 type PlaylistAttributes = {
     title: string
     tags?: Array<unknown>
     user?: { name?: string }
     order: number
+    images?: {
+        main?: ImageVariant[]
+    }
 }
 
 type Props = {
@@ -17,9 +28,10 @@ type Props = {
     onEdit: (playlistId: string) => void
     onDelete: (playlistId: string) => void
     isLoading?: boolean
+    isOwner?: boolean
 }
 
-export const PlaylistsList = ({ playlists, onEdit, onDelete, isLoading }: Props) => {
+export const PlaylistsList = ({ playlists, onEdit, onDelete, isLoading, isOwner }: Props) => {
     if (isLoading) {
         return (
             <ol className={styles.skeletonList}>
@@ -39,6 +51,7 @@ export const PlaylistsList = ({ playlists, onEdit, onDelete, isLoading }: Props)
                     index={index}
                     onEdit={onEdit}
                     onDelete={onDelete}
+                    isOwner={isOwner}
                 />
             ))}
         </ol>

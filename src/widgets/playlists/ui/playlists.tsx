@@ -13,9 +13,10 @@ type Props = {
     onPlaylistSelected?: (playlistId: string) => void
     onPlaylistDeleted?: (playlistId: string) => void
     isSearchActive?: boolean
+    isOwner?: boolean
 }
 
-export const Playlists = ({ userId, onPlaylistSelected, onPlaylistDeleted, isSearchActive }: Props) => {
+export const Playlists = ({ userId, onPlaylistSelected, onPlaylistDeleted, isSearchActive, isOwner }: Props) => {
     const {
         search,
         setSearch,
@@ -62,6 +63,7 @@ export const Playlists = ({ userId, onPlaylistSelected, onPlaylistDeleted, isSea
                 onEdit={onPlaylistSelected ?? (() => {})}
                 onDelete={onPlaylistDeleted ?? (() => {})}
                 isLoading={isFetching && !isPending}
+                isOwner={isOwner}
             />
         </section>
     )
