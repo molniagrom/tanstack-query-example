@@ -10,7 +10,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "api:gen": "pnpm openapi-typescript https://musicfun.it-incubator.app/api-json -o ./src/shared/api/schema.ts --root-types"
+    "api:gen": "pnpm openapi-typescript https://musicfun.it-incubator.app/api-json -o ./src/shared/api/schema.ts --root-types",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.8",
