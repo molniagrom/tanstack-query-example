@@ -3,6 +3,10 @@ import type { paths } from './schema'
 import {apiKey, baseUrl} from "../config/api-config.ts";
 import {localStorageKeys} from "../config/localStorage-keys.ts";
 
+// Только для разработки отправляем API ключ
+// На продакшене backend не принимает API ключ с публичных доменов
+const isDev = import.meta.env.DEV
+
 let refreshPromise: Promise<void> | null = null
 
 function makeRefreshToken(): Promise<void> {
@@ -15,7 +19,7 @@ function makeRefreshToken(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-            'API-KEY': apiKey,
+          ...(isDev && apiKey ? { 'API-KEY': apiKey } : {}),
         },
         body: JSON.stringify({
           refreshToken,
@@ -82,11 +86,14 @@ const authMyMiddleware: Middleware = {
   },
 }
 
+const headers: Record<string, string> = {}
+if (isDev && apiKey) {
+  headers['api-key'] = apiKey
+}
+
 export const client = createClient<paths>({
   baseUrl,
-  headers: {
-    'api-key': apiKey,
-  },
+  headers,
 })
 
 client.use(authMyMiddleware)
