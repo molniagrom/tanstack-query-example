@@ -58,7 +58,7 @@ export const useUploadPlaylistImage = () => {
             if (accessToken) {
                 xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`)
             }
-            if (apiKey && import.meta.env.DEV) {
+            if (apiKey) {
                 xhr.setRequestHeader('api-key', apiKey)
             }
 
@@ -90,6 +90,7 @@ export const useUploadPlaylistImage = () => {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                ...(apiKey ? { 'API-KEY': apiKey } : {}),
                             },
                             body: JSON.stringify({ refreshToken }),
                         })

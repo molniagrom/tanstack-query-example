@@ -3,9 +3,8 @@ import type { paths } from './schema'
 import {apiKey, baseUrl} from "../config/api-config.ts";
 import {localStorageKeys} from "../config/localStorage-keys.ts";
 
-// Только для разработки отправляем API ключ
-// На продакшене backend не принимает API ключ с публичных доменов
-const isDev = import.meta.env.DEV
+// Через Vercel прокси API ключ отправляется безопасно
+// (запросы идут server-to-server, а не из браузера напрямую)
 
 let refreshPromise: Promise<void> | null = null
 
@@ -19,7 +18,7 @@ function makeRefreshToken(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(isDev && apiKey ? { 'API-KEY': apiKey } : {}),
+          ...(apiKey ? { 'API-KEY': apiKey } : {}),
         },
         body: JSON.stringify({
           refreshToken,
@@ -87,7 +86,7 @@ const authMyMiddleware: Middleware = {
 }
 
 const headers: Record<string, string> = {}
-if (isDev && apiKey) {
+if (apiKey) {
   headers['api-key'] = apiKey
 }
 
