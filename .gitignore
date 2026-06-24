@@ -24,3 +24,12 @@ dist-ssr
 *.sw?
 
 .vercel
+.vercel-tmp
+
+# MiMo
+.mimocode
+PLAN.md
+
+# Screenshots
+screenshot-*.png
+vercel-deploy-screenshot.png
