@@ -52,7 +52,7 @@ export const PlaylistItem = ({ playlist, index, onEdit, onDelete, isOwner }: Pro
 
             <div className={styles.meta}>
                 <Link
-                    to="/playlist/$playlistId"
+                    to="/playlist-detail/$playlistId"
                     params={{playlistId: playlist.id}}
                     style={{textDecoration: "none", color: "inherit"}}
                 >
