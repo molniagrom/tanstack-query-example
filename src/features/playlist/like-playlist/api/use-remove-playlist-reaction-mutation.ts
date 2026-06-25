@@ -86,7 +86,7 @@ export const useRemovePlaylistReactionMutation = () => {
                 }
             }
         },
-        onSettled: (_data, _err, playlistId) => {
+        onSuccess: (_data, playlistId) => {
             queryClient.invalidateQueries({queryKey: playlistsKeys.lists()})
             queryClient.invalidateQueries({queryKey: playlistsKeys.detail(playlistId)})
         },
