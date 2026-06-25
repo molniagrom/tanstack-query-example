@@ -88,6 +88,9 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
                 setQueue(q => {
                     if (nextIdx < q.length) {
                         const nextTrack = q[nextIdx]
+                        if (!nextTrack) {
+                            return q
+                        }
                         if (audioRef.current) {
                             audioRef.current.src = nextTrack.audioUrl
                             audioRef.current.play().catch(() => {})
@@ -95,7 +98,10 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
                         setCurrentTrack(nextTrack)
                         setIsPlaying(true)
                     } else if (currentRepeat === "all" && q.length > 0) {
-                        const firstTrack = q[0]!
+                        const firstTrack = q[0]
+                        if (!firstTrack) {
+                            return q
+                        }
                         if (audioRef.current) {
                             audioRef.current.src = firstTrack.audioUrl
                             audioRef.current.play().catch(() => {})
@@ -175,6 +181,9 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
         }
         if (nextIdx < queue.length) {
             const track = queue[nextIdx]
+            if (!track) {
+                return
+            }
             if (audioRef.current) {
                 audioRef.current.src = track.audioUrl
                 audioRef.current.play().catch(() => {})
@@ -197,6 +206,9 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
         }
         if (newIdx >= 0 && newIdx < queue.length) {
             const track = queue[newIdx]
+            if (!track) {
+                return
+            }
             if (audioRef.current) {
                 audioRef.current.src = track.audioUrl
                 audioRef.current.play().catch(() => {})
