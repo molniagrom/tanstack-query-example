@@ -21,14 +21,17 @@ export const useDeleteMutation = () => {
             return response.data;
         },
 
-        onSuccess: (_, playlistId) => {
+        onMutate: async (playlistId) => {
+            await queryClient.cancelQueries({queryKey: playlistsKeys.lists()})
+
+            const previousLists = queryClient.getQueriesData<SchemaGetPlaylistsOutput | SchemaGetMyPlaylistsOutput>({
+                queryKey: playlistsKeys.lists(),
+            })
+
             queryClient.setQueriesData<SchemaGetPlaylistsOutput | SchemaGetMyPlaylistsOutput>(
                 {queryKey: playlistsKeys.lists()},
                 olddata => {
-                    if (!olddata) {
-                        return olddata
-                    }
-
+                    if (!olddata) return olddata
                     return {
                         ...olddata,
                         data: olddata.data.filter(p => p.id !== playlistId)
@@ -36,6 +39,16 @@ export const useDeleteMutation = () => {
                 })
 
             queryClient.removeQueries({queryKey: playlistsKeys.detail(playlistId)})
-        }
+
+            return {previousLists}
+        },
+
+        onError: (_err, _playlistId, context) => {
+            if (context?.previousLists) {
+                for (const [key, data] of context.previousLists) {
+                    queryClient.setQueryData(key, data)
+                }
+            }
+        },
     })
 }
