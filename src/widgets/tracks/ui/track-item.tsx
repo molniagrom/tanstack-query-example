@@ -1,6 +1,7 @@
 import {Link} from "@tanstack/react-router";
 import styles from './tracks.module.css'
 import {LikeDislikeTrack} from "../../../features/track/like-track/ui/LikeDislikeTrack.tsx"
+import {usePlayer} from "../../../features/player/model/use-player-store"
 
 type TrackImages = {
     main?: Array<{ type: string; url: string; width: number; height: number }>
@@ -44,7 +45,7 @@ type Props = {
     track: TrackItem
     index: number
     artists?: TrackArtist[]
-    onPlay: (track: TrackItem) => void
+    queue?: TrackItem[]
 }
 
 const formatDuration = (seconds: number): string => {
@@ -53,18 +54,46 @@ const formatDuration = (seconds: number): string => {
     return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-export const TrackItem = ({track, index, artists, onPlay}: Props) => {
+export const TrackItem = ({track, index, artists, queue}: Props) => {
+    const {currentTrack, isPlaying, play, toggle} = usePlayer()
     const coverUrl = track.attributes.images.main?.[0]?.url
+    const audioUrl = track.attributes.attachments?.[0]?.url
     const trackArtists = track.relationships?.artists.data
         .map(a => artists?.find(ar => ar.id === a.id)?.attributes.name)
         .filter(Boolean)
         .join(", ")
 
+    const isCurrentTrack = currentTrack?.id === track.id
+
+    const handleClick = () => {
+        if (isCurrentTrack) {
+            toggle()
+        } else if (audioUrl) {
+            const trackQueue = (queue ?? []).map(t => ({
+                id: t.id,
+                title: t.attributes.title,
+                artist: t.relationships?.artists.data
+                    .map(a => artists?.find(ar => ar.id === a.id)?.attributes.name)
+                    .filter(Boolean)
+                    .join(", ") || t.attributes.user.name,
+                coverUrl: t.attributes.images.main?.[0]?.url,
+                audioUrl: t.attributes.attachments?.[0]?.url ?? "",
+            }))
+            play({
+                id: track.id,
+                title: track.attributes.title,
+                artist: trackArtists || track.attributes.user.name,
+                coverUrl,
+                audioUrl,
+            }, trackQueue.length > 0 ? trackQueue : undefined)
+        }
+    }
+
     return (
-        <li className={styles.item}>
+        <li className={`${styles.item} ${isCurrentTrack ? styles.itemActive : ""}`}>
             <span className={styles.index}>{String(index + 1).padStart(2, '0')}</span>
 
-            <Link to="/track/$trackId" params={{trackId: track.id}} style={{display: "contents"}}>
+            <Link to="/track-detail/$trackId" params={{trackId: track.id}} style={{display: "contents"}}>
                 {coverUrl ? (
                     <img src={coverUrl} alt={track.attributes.title} className={styles.cover} />
                 ) : (
@@ -86,15 +115,17 @@ export const TrackItem = ({track, index, artists, onPlay}: Props) => {
                     currentUserReaction={track.attributes.currentUserReaction}
                     likesCount={track.attributes.likesCount}
                 />
-                <button
-                    type="button"
-                    className={styles.playButton}
-                    onClick={() => onPlay(track)}
-                    aria-label={`Play ${track.attributes.title}`}
-                    title="Play"
-                >
-                    ▶
-                </button>
+                {audioUrl && (
+                    <button
+                        type="button"
+                        className={`${styles.playButton} ${isCurrentTrack && isPlaying ? styles.playButtonActive : ""}`}
+                        onClick={handleClick}
+                        aria-label={`${isCurrentTrack && isPlaying ? "Pause" : "Play"} ${track.attributes.title}`}
+                        title={isCurrentTrack && isPlaying ? "Pause" : "Play"}
+                    >
+                        {isCurrentTrack && isPlaying ? "⏸" : "▶"}
+                    </button>
+                )}
             </div>
 
             <span className={styles.duration}>{formatDuration(track.attributes.duration)}</span>

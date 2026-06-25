@@ -31,11 +31,10 @@ type TrackItem = {
 }
 
 type Props = {
-    onPlayTrack?: (track: TrackItem) => void
     userId?: string
 }
 
-export const Tracks = ({onPlayTrack, userId}: Props) => {
+export const Tracks = ({userId}: Props) => {
     const {
         search,
         setSearch,
@@ -130,7 +129,7 @@ export const Tracks = ({onPlayTrack, userId}: Props) => {
                         track={track}
                         index={index}
                         artists={allArtists}
-                        onPlay={onPlayTrack ?? (() => {})}
+                        queue={allTracks}
                     />
                 ))}
             </ol>

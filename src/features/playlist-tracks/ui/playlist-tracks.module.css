@@ -105,6 +105,15 @@
     background: rgba(229, 169, 60, 0.18);
 }
 
+.playButtonActive {
+    background: rgba(229, 169, 60, 0.25);
+    border-color: rgba(229, 169, 60, 0.6);
+}
+
+.trackItemActive {
+    border-color: rgba(229, 169, 60, 0.3);
+}
+
 .emptyState {
     text-align: center;
     padding: 24px;

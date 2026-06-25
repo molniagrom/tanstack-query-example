@@ -6,14 +6,12 @@ import {PlaylistTracksList} from "../features/playlist-tracks/ui/PlaylistTracksL
 import {LikeDislikePlaylist} from "../features/playlist/like-playlist/ui/LikeDislikePlaylist.tsx";
 import {useState} from "react";
 import {EditPlaylistForm} from "../features/playlist/edit-playlist/ui/EditPlaylistForm.tsx";
-import {usePlayer} from "../features/player/model/use-player-store.tsx";
 
 function PlaylistDetailPage() {
-    const {playlistId} = useParams({from: '/playlist/$playlistId'})
+    const {playlistId} = useParams({from: '/playlist-detail/$playlistId'})
     const {data: playlist, isPending, isError} = usePlaylistQuery(playlistId)
     const {data: me} = useMeQuery()
     const [isEditing, setIsEditing] = useState(false)
-    const {play} = usePlayer()
 
     if (isPending) {
         return <section className={styles.shell}><div className={styles.description}>Loading...</div></section>
@@ -25,16 +23,6 @@ function PlaylistDetailPage() {
 
     const attrs = playlist.data.attributes
     const isOwner = me?.userId === attrs.user.id
-
-    const handlePlayTrack = (track: { id: string; attributes: { title: string; attachments: Array<{ url: string }>; images: { main?: Array<{ url: string }> }; user: { name: string } } }) => {
-        play({
-            id: track.id,
-            title: track.attributes.title,
-            artist: track.attributes.user.name,
-            coverUrl: track.attributes.images.main?.[0]?.url,
-            audioUrl: track.attributes.attachments[0]?.url,
-        })
-    }
 
     return (
         <section className={styles.shell}>
@@ -66,7 +54,6 @@ function PlaylistDetailPage() {
             <PlaylistTracksList
                 playlistId={playlistId}
                 isOwner={isOwner}
-                onPlayTrack={handlePlayTrack}
             />
 
             <EditPlaylistForm

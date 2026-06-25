@@ -10,8 +10,21 @@ const formatTime = (seconds: number): string => {
 export const AudioPlayer = () => {
     const {
         currentTrack, isPlaying, currentTime, duration, volume,
+        isShuffle, repeatMode,
         toggle, seek, setVolume, next, prev,
+        toggleShuffle, cycleRepeat,
     } = usePlayer()
+
+    const handleFullscreen = () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen()
+        } else {
+            document.documentElement.requestFullscreen()
+        }
+    }
+
+    const repeatLabel = repeatMode === "one" ? "Repeat One" : repeatMode === "all" ? "Repeat All" : "Repeat Off"
+    const repeatIcon = repeatMode === "one" ? "🔂" : "🔁"
 
     if (!currentTrack) {
         return (
@@ -37,6 +50,14 @@ export const AudioPlayer = () => {
 
             <div className={styles.controls}>
                 <div className={styles.controlButtons}>
+                    <button
+                        type="button"
+                        className={`${styles.controlBtn} ${isShuffle ? styles.controlBtnActive : ""}`}
+                        onClick={toggleShuffle}
+                        title={isShuffle ? "Shuffle On" : "Shuffle Off"}
+                    >
+                        🔀
+                    </button>
                     <button type="button" className={styles.controlBtn} onClick={prev} title="Previous">⏮</button>
                     <button
                         type="button"
@@ -47,6 +68,14 @@ export const AudioPlayer = () => {
                         {isPlaying ? "⏸" : "▶"}
                     </button>
                     <button type="button" className={styles.controlBtn} onClick={next} title="Next">⏭</button>
+                    <button
+                        type="button"
+                        className={`${styles.controlBtn} ${repeatMode !== "off" ? styles.controlBtnActive : ""}`}
+                        onClick={cycleRepeat}
+                        title={repeatLabel}
+                    >
+                        {repeatIcon}
+                    </button>
                 </div>
                 <div className={styles.progressRow}>
                     <span className={styles.timeLabel}>{formatTime(currentTime)}</span>
@@ -73,6 +102,14 @@ export const AudioPlayer = () => {
                     value={volume}
                     onChange={e => setVolume(Number(e.target.value))}
                 />
+                <button
+                    type="button"
+                    className={styles.controlBtn}
+                    onClick={handleFullscreen}
+                    title="Fullscreen"
+                >
+                    ⛶
+                </button>
             </div>
         </div>
     )

@@ -8,7 +8,7 @@ import {EditTrackForm} from "../features/track/edit-track/ui/EditTrackForm.tsx";
 import {usePlayer} from "../features/player/model/use-player-store.tsx";
 
 function TrackDetailPage() {
-    const {trackId} = useParams({from: '/track/$trackId'})
+    const {trackId} = useParams({from: '/track-detail/$trackId'})
     const {data, isPending, isError} = useTrackDetailsQuery(trackId)
     const {data: me} = useMeQuery()
     const [isEditing, setIsEditing] = useState(false)

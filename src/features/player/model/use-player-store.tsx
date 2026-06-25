@@ -8,6 +8,8 @@ type Track = {
     audioUrl: string
 }
 
+type RepeatMode = "off" | "all" | "one"
+
 type PlayerContextValue = {
     currentTrack: Track | null
     isPlaying: boolean
@@ -15,6 +17,8 @@ type PlayerContextValue = {
     duration: number
     volume: number
     queue: Track[]
+    isShuffle: boolean
+    repeatMode: RepeatMode
     play: (track: Track, queue?: Track[]) => void
     pause: () => void
     resume: () => void
@@ -23,6 +27,8 @@ type PlayerContextValue = {
     setVolume: (volume: number) => void
     next: () => void
     prev: () => void
+    toggleShuffle: () => void
+    cycleRepeat: () => void
 }
 
 const PlayerContext = createContext<PlayerContextValue | null>(null)
@@ -41,7 +47,22 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
     const [duration, setDuration] = useState(0)
     const [volume, setVolumeState] = useState(1)
     const [queue, setQueue] = useState<Track[]>([])
-    const [queueIndex, setQueueIndex] = useState(-1)
+    const queueIndexRef = useRef(-1)
+    const [isShuffle, setIsShuffle] = useState(false)
+    const [repeatMode, setRepeatMode] = useState<RepeatMode>("off")
+    const repeatModeRef = useRef<RepeatMode>("off")
+
+    const toggleShuffle = useCallback(() => {
+        setIsShuffle(prev => !prev)
+    }, [])
+
+    const cycleRepeat = useCallback(() => {
+        setRepeatMode(prev => {
+            const next = prev === "off" ? "all" : prev === "all" ? "one" : "off"
+            repeatModeRef.current = next
+            return next
+        })
+    }, [])
 
     const getAudio = useCallback(() => {
         if (!audioRef.current) {
@@ -53,24 +74,40 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
                 setDuration(audioRef.current?.duration ?? 0)
             })
             audioRef.current.addEventListener("ended", () => {
+                const currentRepeat = repeatModeRef.current
+                if (currentRepeat === "one") {
+                    if (audioRef.current) {
+                        audioRef.current.currentTime = 0
+                        audioRef.current.play().catch(() => {})
+                    }
+                    return
+                }
                 setIsPlaying(false)
-                // Auto-advance to next track
-                setQueueIndex(prev => {
-                    const nextIdx = prev + 1
-                    setQueue(q => {
-                        if (nextIdx < q.length) {
-                            const nextTrack = q[nextIdx]
-                            if (audioRef.current) {
-                                audioRef.current.src = nextTrack.audioUrl
-                                audioRef.current.play().catch(() => {})
-                            }
-                            setCurrentTrack(nextTrack)
-                            setIsPlaying(true)
+                const prevIdx = queueIndexRef.current
+                const nextIdx = prevIdx + 1
+                setQueue(q => {
+                    if (nextIdx < q.length) {
+                        const nextTrack = q[nextIdx]
+                        if (audioRef.current) {
+                            audioRef.current.src = nextTrack.audioUrl
+                            audioRef.current.play().catch(() => {})
                         }
+                        setCurrentTrack(nextTrack)
+                        setIsPlaying(true)
+                    } else if (currentRepeat === "all" && q.length > 0) {
+                        const firstTrack = q[0]!
+                        if (audioRef.current) {
+                            audioRef.current.src = firstTrack.audioUrl
+                            audioRef.current.play().catch(() => {})
+                        }
+                        setCurrentTrack(firstTrack)
+                        setIsPlaying(true)
+                        queueIndexRef.current = 0
                         return q
-                    })
-                    return nextIdx
+                    }
+                    return q
                 })
+                queueIndexRef.current = nextIdx
             })
             audioRef.current.volume = volume
         }
@@ -85,10 +122,10 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
         if (newQueue) {
             setQueue(newQueue)
             const idx = newQueue.findIndex(t => t.id === track.id)
-            setQueueIndex(idx >= 0 ? idx : 0)
+            queueIndexRef.current = idx >= 0 ? idx : 0
         } else {
             setQueue([track])
-            setQueueIndex(0)
+            queueIndexRef.current = 0
         }
 
         setCurrentTrack(track)
@@ -127,41 +164,55 @@ export const PlayerProvider = ({children}: {children: ReactNode}) => {
     }, [])
 
     const next = useCallback(() => {
-        setQueueIndex(prev => {
-            const nextIdx = prev + 1
-            if (nextIdx < queue.length) {
-                const track = queue[nextIdx]
-                if (audioRef.current) {
-                    audioRef.current.src = track.audioUrl
-                    audioRef.current.play().catch(() => {})
-                }
-                setCurrentTrack(track)
-                setIsPlaying(true)
+        const prevIdx = queueIndexRef.current
+        let nextIdx: number
+        if (isShuffle && queue.length > 1) {
+            do {
+                nextIdx = Math.floor(Math.random() * queue.length)
+            } while (nextIdx === prevIdx)
+        } else {
+            nextIdx = prevIdx + 1
+        }
+        if (nextIdx < queue.length) {
+            const track = queue[nextIdx]
+            if (audioRef.current) {
+                audioRef.current.src = track.audioUrl
+                audioRef.current.play().catch(() => {})
             }
-            return nextIdx
-        })
-    }, [queue])
+            setCurrentTrack(track)
+            setIsPlaying(true)
+        }
+        queueIndexRef.current = nextIdx
+    }, [queue, isShuffle])
 
     const prev = useCallback(() => {
-        setQueueIndex(prev => {
-            const prevIdx = prev - 1
-            if (prevIdx >= 0) {
-                const track = queue[prevIdx]
-                if (audioRef.current) {
-                    audioRef.current.src = track.audioUrl
-                    audioRef.current.play().catch(() => {})
-                }
-                setCurrentTrack(track)
-                setIsPlaying(true)
+        const prevIdx = queueIndexRef.current
+        let newIdx: number
+        if (isShuffle && queue.length > 1) {
+            do {
+                newIdx = Math.floor(Math.random() * queue.length)
+            } while (newIdx === prevIdx)
+        } else {
+            newIdx = prevIdx - 1
+        }
+        if (newIdx >= 0 && newIdx < queue.length) {
+            const track = queue[newIdx]
+            if (audioRef.current) {
+                audioRef.current.src = track.audioUrl
+                audioRef.current.play().catch(() => {})
             }
-            return prevIdx
-        })
-    }, [queue])
+            setCurrentTrack(track)
+            setIsPlaying(true)
+        }
+        queueIndexRef.current = newIdx
+    }, [queue, isShuffle])
 
     return (
         <PlayerContext.Provider value={{
             currentTrack, isPlaying, currentTime, duration, volume, queue,
+            isShuffle, repeatMode,
             play, pause, resume, toggle, seek, setVolume, next, prev,
+            toggleShuffle, cycleRepeat,
         }}>
             {children}
         </PlayerContext.Provider>

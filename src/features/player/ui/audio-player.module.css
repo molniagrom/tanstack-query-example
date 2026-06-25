@@ -98,6 +98,11 @@
     background: rgba(229, 169, 60, 0.1);
 }
 
+.controlBtnActive {
+    color: #e5a93c;
+    background: rgba(229, 169, 60, 0.12);
+}
+
 .playPauseBtn {
     width: 40px;
     height: 40px;
