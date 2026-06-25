@@ -14,7 +14,7 @@ export const useCreateTagMutation = () => {
                 throw response.error
             }
 
-            return response.data.data
+            return response.data!.data
         },
         meta: {globalErrorHandler: "off"},
         onSuccess: () => {

@@ -1,6 +1,6 @@
 import styles from './EditTrackForm.module.css'
 import {useEffect, useState} from "react";
-import {type Path, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {toast} from "react-toastify";
 import {type EditTrackFormValues, validateEditTrackForm} from "./edit-track-form.validation.ts";
 import {useTrackDetailsQuery} from "../api/use-track-details-query.ts";

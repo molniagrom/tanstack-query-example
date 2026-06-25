@@ -1,33 +1,13 @@
 import styles from './tracks.module.css'
 import {Pagination} from "../../../shared/ui/pagination"
 import {useTracksList} from "../model/use-tracks-list"
-import {TrackItem} from "./track-item"
+import {TrackItem, type TrackItem as TrackItemType} from "./track-item"
 import {PlaylistItemSkeleton} from "../../playlists/ui/playlist-item-skeleton"
 
 type TrackArtist = {
     id: string
     type: string
     attributes: { name: string }
-}
-
-type TrackItem = {
-    id: string
-    type: string
-    attributes: {
-        title: string
-        addedAt: string
-        likesCount: number
-        attachments: Array<{ id: string; url: string; contentType: string }>
-        images: { main?: Array<{ type: string; url: string }> }
-        user: { id: string; name: string }
-        currentUserReaction: 0 | 1 | -1
-        isPublished: boolean
-        publishedAt?: string | null
-        duration: number
-    }
-    relationships?: {
-        artists: { data: Array<{ id: string; type: string }> }
-    }
 }
 
 type Props = {
@@ -52,7 +32,7 @@ export const Tracks = ({userId}: Props) => {
         pagesCount,
     } = useTracksList({userId})
 
-    const allTracks = tracks as TrackItem[]
+    const allTracks = tracks as TrackItemType[]
     const allArtists: TrackArtist[] = []
 
     if (isPending) {
@@ -107,7 +87,7 @@ export const Tracks = ({userId}: Props) => {
                     <button
                         type="button"
                         className={styles.sortButton}
-                        onClick={() => setSortDirection(d => d === "asc" ? "desc" : "asc")}
+                        onClick={() => setSortDirection((d: "asc" | "desc") => d === "asc" ? "desc" : "asc")}
                         title={`Sort ${sortDirection === "asc" ? "descending" : "ascending"}`}
                     >
                         {sortDirection === "asc" ? "↑" : "↓"}

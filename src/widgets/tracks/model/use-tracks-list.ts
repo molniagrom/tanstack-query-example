@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useAllTracksQuery} from "../api/use-all-tracks-query.ts";
-import type {SchemaGetTracksRequestPayload} from "../../../../shared/api/schema.ts";
+import type {SchemaGetTracksRequestPayload} from "../../../shared/api/schema.ts";
 
 type UseTracksListArgs = {
     userId?: string

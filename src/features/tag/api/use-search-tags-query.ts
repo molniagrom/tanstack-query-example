@@ -14,7 +14,7 @@ export const useSearchTagsQuery = (search: string) => {
                 throw response.error
             }
 
-            return response.data.data
+            return response.data!.data
         },
         enabled: search.length >= 2,
         staleTime: 30_000,
