@@ -24,7 +24,7 @@ export const useUpdatePlaylistMutation = () => {
                 params: {
                     path: {playlistId}
                 },
-                body: {...rest, tegIds: []}
+                body: rest,
             })
 
             if (response.error) {

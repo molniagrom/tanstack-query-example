@@ -9,10 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './__root'
+import { Route as TracksRouteImport } from './tracks'
+import { Route as TrackDetailRouteImport } from './track-detail'
+import { Route as PlaylistDetailRouteImport } from './playlist-detail'
 import { Route as MyPlaylistsRouteImport } from './my-playlists'
 import { Route as IndexRouteImport } from './index'
 import { Route as OauthCallbackRouteImport } from './oauth/callback'
 
+const TracksRoute = TracksRouteImport.update({
+  id: '/tracks',
+  path: '/tracks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrackDetailRoute = TrackDetailRouteImport.update({
+  id: '/track-detail',
+  path: '/track-detail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaylistDetailRoute = PlaylistDetailRouteImport.update({
+  id: '/playlist-detail',
+  path: '/playlist-detail',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MyPlaylistsRoute = MyPlaylistsRouteImport.update({
   id: '/my-playlists',
   path: '/my-playlists',
@@ -32,35 +50,87 @@ const OauthCallbackRoute = OauthCallbackRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
+  '/playlist-detail': typeof PlaylistDetailRoute
+  '/track-detail': typeof TrackDetailRoute
+  '/tracks': typeof TracksRoute
   '/oauth/callback': typeof OauthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
+  '/playlist-detail': typeof PlaylistDetailRoute
+  '/track-detail': typeof TrackDetailRoute
+  '/tracks': typeof TracksRoute
   '/oauth/callback': typeof OauthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
+  '/playlist-detail': typeof PlaylistDetailRoute
+  '/track-detail': typeof TrackDetailRoute
+  '/tracks': typeof TracksRoute
   '/oauth/callback': typeof OauthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/my-playlists' | '/oauth/callback'
+  fullPaths:
+    | '/'
+    | '/my-playlists'
+    | '/playlist-detail'
+    | '/track-detail'
+    | '/tracks'
+    | '/oauth/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/my-playlists' | '/oauth/callback'
-  id: '__root__' | '/' | '/my-playlists' | '/oauth/callback'
+  to:
+    | '/'
+    | '/my-playlists'
+    | '/playlist-detail'
+    | '/track-detail'
+    | '/tracks'
+    | '/oauth/callback'
+  id:
+    | '__root__'
+    | '/'
+    | '/my-playlists'
+    | '/playlist-detail'
+    | '/track-detail'
+    | '/tracks'
+    | '/oauth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MyPlaylistsRoute: typeof MyPlaylistsRoute
+  PlaylistDetailRoute: typeof PlaylistDetailRoute
+  TrackDetailRoute: typeof TrackDetailRoute
+  TracksRoute: typeof TracksRoute
   OauthCallbackRoute: typeof OauthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tracks': {
+      id: '/tracks'
+      path: '/tracks'
+      fullPath: '/tracks'
+      preLoaderRoute: typeof TracksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/track-detail': {
+      id: '/track-detail'
+      path: '/track-detail'
+      fullPath: '/track-detail'
+      preLoaderRoute: typeof TrackDetailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playlist-detail': {
+      id: '/playlist-detail'
+      path: '/playlist-detail'
+      fullPath: '/playlist-detail'
+      preLoaderRoute: typeof PlaylistDetailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/my-playlists': {
       id: '/my-playlists'
       path: '/my-playlists'
@@ -88,6 +158,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MyPlaylistsRoute: MyPlaylistsRoute,
+  PlaylistDetailRoute: PlaylistDetailRoute,
+  TrackDetailRoute: TrackDetailRoute,
+  TracksRoute: TracksRoute,
   OauthCallbackRoute: OauthCallbackRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,0 +1,205 @@
+.playerBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 24px;
+    border-top: 1px solid rgba(113, 128, 150, 0.15);
+    background: rgba(255, 252, 245, 0.98);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.trackInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.cover {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.coverPlaceholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(229, 169, 60, 0.12), rgba(200, 160, 80, 0.08));
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.trackText {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.trackTitle {
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trackArtist {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.controlButtons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.controlBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-strong);
+    transition: background 0.18s ease;
+}
+
+.controlBtn:hover {
+    background: rgba(229, 169, 60, 0.1);
+}
+
+.playPauseBtn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(229, 169, 60, 0.4);
+    background: rgba(229, 169, 60, 0.12);
+    font-size: 1rem;
+}
+
+.playPauseBtn:hover {
+    background: rgba(229, 169, 60, 0.22);
+}
+
+.progressRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.timeLabel {
+    font-size: 0.72rem;
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
+    min-width: 36px;
+    text-align: center;
+}
+
+.progressSlider {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(113, 128, 150, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.progressSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #e5a93c;
+    cursor: pointer;
+}
+
+.volumeRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.volumeSlider {
+    width: 100px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(113, 128, 150, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #e5a93c;
+    cursor: pointer;
+}
+
+.volumeLabel {
+    font-size: 0.72rem;
+    color: var(--text-soft);
+}
+
+.emptyPlayer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 8px 24px;
+    border-top: 1px solid rgba(113, 128, 150, 0.1);
+    background: rgba(255, 252, 245, 0.95);
+    backdrop-filter: blur(12px);
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-soft);
+}
+
+:global([data-theme="dark"]) .playerBar,
+:global([data-theme="dark"]) .emptyPlayer {
+    background: rgba(36, 26, 22, 0.98);
+    border-color: rgba(229, 169, 60, 0.1);
+}
+
+:global([data-theme="dark"]) .progressSlider,
+:global([data-theme="dark"]) .volumeSlider {
+    background: rgba(229, 169, 60, 0.15);
+}

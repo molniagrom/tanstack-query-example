@@ -16,6 +16,8 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
         isSubmitting,
         onSubmit,
         clearSubmitError,
+        setValue,
+        watch,
     } = useEditPlaylistForm({playlistId, onClose})
 
     if (!playlistId) return <></>
@@ -57,6 +59,8 @@ export const EditPlaylistForm = ({playlistId, onClose}: Props) => {
                 isSubmitting={isSubmitting}
                 submitError={submitError}
                 onClearSubmitError={clearSubmitError}
+                setValue={setValue}
+                watch={watch}
             />
         </form>
     </div>

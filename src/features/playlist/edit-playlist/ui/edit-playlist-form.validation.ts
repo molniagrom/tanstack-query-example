@@ -10,6 +10,7 @@ export const editPlaylistSchema = z.object({
         .string()
         .trim()
         .max(1000, "Description must be at most 1000 characters"),
+    tagIds: z.array(z.string()).max(5, "Maximum 5 tags allowed"),
 })
 
 export type EditPlaylistFormValues = z.infer<typeof editPlaylistSchema>

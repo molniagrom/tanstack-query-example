@@ -18,6 +18,9 @@ type PlaylistAttributes = {
     images?: {
         main?: ImageVariant[]
     }
+    likesCount?: number
+    dislikesCount?: number
+    currentUserReaction?: 0 | 1 | -1
 }
 
 type Props = {

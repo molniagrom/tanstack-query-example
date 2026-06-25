@@ -19,11 +19,14 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
         reset,
         setError,
         clearErrors,
+        setValue,
+        watch,
         formState: {errors, isSubmitting}
     } = useForm<EditPlaylistFormValues>({
         defaultValues: {
             title: "",
             description: "",
+            tagIds: [],
         }
     })
 
@@ -39,7 +42,8 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
 
         reset({
             title: playlistQuery.data.data.attributes.title,
-            description: playlistQuery.data.data.attributes.description ?? ""
+            description: playlistQuery.data.data.attributes.description ?? "",
+            tagIds: playlistQuery.data.data.attributes.tags?.map(t => t.id) ?? [],
         })
     }, [playlistQuery.data, reset])
 
@@ -61,7 +65,7 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
             validationResult.error.issues.forEach(issue => {
                 const field = issue.path[0]
 
-                if (field === "title" || field === "description") {
+                if (field === "title" || field === "description" || field === "tagIds") {
                     setError(field, {
                         type: "zod",
                         message: issue.message
@@ -78,7 +82,7 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
                 attributes: {
                     title: validationResult.data.title,
                     description: validationResult.data.description || null,
-                    tagIds: []
+                    tagIds: validationResult.data.tagIds,
                 }
             }
         }
@@ -112,5 +116,7 @@ export const useEditPlaylistForm = ({playlistId, onClose}: UseEditPlaylistFormAr
             setSubmitError(null)
             clearErrors("root")
         },
+        setValue,
+        watch,
     }
 }

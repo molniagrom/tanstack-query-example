@@ -1,7 +1,9 @@
 import styles from './playlists.module.css'
+import { Link } from "@tanstack/react-router";
 import { DeletePlaylist } from "../../../features/playlist/delete-playlist/ui/delete-playlist.tsx"
 import { UploadPlaylistImage } from "../../../features/playlist/upload-playlist-image/ui/upload-playlist-image"
 import { PlaylistAvatar } from './playlist-avatar'
+import { LikeDislikePlaylist } from "../../../features/playlist/like-playlist/ui/LikeDislikePlaylist.tsx"
 
 type ImageVariant = {
     type: string
@@ -19,6 +21,9 @@ type PlaylistAttributes = {
     images?: {
         main?: ImageVariant[]
     }
+    likesCount?: number
+    dislikesCount?: number
+    currentUserReaction?: 0 | 1 | -1
 }
 
 type Props = {
@@ -46,11 +51,24 @@ export const PlaylistItem = ({ playlist, index, onEdit, onDelete, isOwner }: Pro
             />
 
             <div className={styles.meta}>
-                <span className={styles.title}>{playlist.attributes.title}</span>
+                <Link
+                    to="/playlist/$playlistId"
+                    params={{playlistId: playlist.id}}
+                    style={{textDecoration: "none", color: "inherit"}}
+                >
+                    <span className={styles.title}>{playlist.attributes.title}</span>
+                </Link>
                 <span className={styles.subtitle}>
                     {authorName} • {tagsCount} {tagsCount === 1 ? 'tag' : 'tags'}
                 </span>
             </div>
+
+            <LikeDislikePlaylist
+                playlistId={playlist.id}
+                currentUserReaction={playlist.attributes.currentUserReaction ?? 0}
+                likesCount={playlist.attributes.likesCount ?? 0}
+                dislikesCount={playlist.attributes.dislikesCount ?? 0}
+            />
 
             {isOwner && (
                 <div className={styles.actions}>

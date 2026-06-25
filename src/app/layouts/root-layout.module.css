@@ -1,7 +1,7 @@
 .page {
   width: min(var(--page-width), calc(100% - 32px));
   margin: 0 auto;
-  padding: 34px 0 64px;
+  padding: 34px 0 120px;
   position: relative;
 }
 

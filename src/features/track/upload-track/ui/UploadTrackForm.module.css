@@ -1,0 +1,147 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(229, 169, 60, 0.12), transparent 36%),
+    rgba(37, 25, 20, 0.64);
+  backdrop-filter: blur(10px);
+}
+
+.form {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  width: min(100%, 480px);
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top left, rgba(229, 169, 60, 0.09), transparent 28%),
+    linear-gradient(180deg, rgba(255, 251, 242, 0.98), rgba(244, 233, 210, 0.95));
+  box-shadow:
+    0 24px 80px rgba(37, 25, 20, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.92);
+  color: var(--leather);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 249, 233, 0.98);
+  border-color: rgba(229, 169, 60, 0.3);
+  transform: translateY(-1px);
+}
+
+.title {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  line-height: 1.08;
+}
+
+.field {
+  display: block;
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid rgba(113, 128, 150, 0.3);
+  border-radius: 18px;
+  background: rgba(255, 252, 245, 0.94);
+  color: var(--text-strong);
+  font: inherit;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(229, 169, 60, 0.42);
+  box-shadow: 0 0 0 4px rgba(229, 169, 60, 0.12);
+}
+
+.fileInput {
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.fileName {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+}
+
+.progressBar {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(113, 128, 150, 0.15);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #e5a93c, #c98b1d);
+  transition: width 0.2s ease;
+}
+
+.submitButton {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid rgba(126, 89, 20, 0.7);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f9e5a7 0%, #e5a93c 52%, #c98b1d 100%);
+  color: #3e2723;
+  font-size: 0.94rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.submitButton:hover {
+  background: linear-gradient(180deg, #fdf0bf 0%, #efbe50 52%, #d19118 100%);
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+:global([data-theme="dark"]) .overlay {
+  background:
+    radial-gradient(circle at top, rgba(229, 169, 60, 0.1), transparent 36%),
+    rgba(9, 7, 6, 0.72);
+}
+
+:global([data-theme="dark"]) .form,
+:global([data-theme="dark"]) .closeButton,
+:global([data-theme="dark"]) .input {
+  background: linear-gradient(180deg, rgba(58, 43, 35, 0.98), rgba(36, 26, 22, 0.96));
+  border-color: rgba(229, 169, 60, 0.2);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}

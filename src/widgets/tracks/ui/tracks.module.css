@@ -1,0 +1,204 @@
+.section {
+    display: grid;
+    gap: 16px;
+}
+
+.list {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item {
+    display: grid;
+    grid-template-columns: 32px 48px 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid rgba(113, 128, 150, 0.15);
+    border-radius: 16px;
+    background: rgba(255, 252, 245, 0.94);
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.item:hover {
+    border-color: rgba(229, 169, 60, 0.28);
+    box-shadow: 0 2px 8px rgba(229, 169, 60, 0.08);
+}
+
+.index {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.cover {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: linear-gradient(135deg, rgba(229, 169, 60, 0.12), rgba(200, 160, 80, 0.08));
+}
+
+.coverPlaceholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(229, 169, 60, 0.12), rgba(200, 160, 80, 0.08));
+    font-size: 1.2rem;
+}
+
+.meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.subtitle {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.playButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid rgba(229, 169, 60, 0.3);
+    border-radius: 999px;
+    background: rgba(229, 169, 60, 0.1);
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.playButton:hover {
+    background: rgba(229, 169, 60, 0.2);
+    border-color: rgba(229, 169, 60, 0.5);
+}
+
+.duration {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.sortControls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sortSelect {
+    padding: 6px 10px;
+    border: 1px solid rgba(113, 128, 150, 0.3);
+    border-radius: 12px;
+    background: rgba(255, 252, 245, 0.94);
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--text-strong);
+    cursor: pointer;
+}
+
+.sortButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid rgba(113, 128, 150, 0.3);
+    border-radius: 999px;
+    background: rgba(255, 252, 245, 0.94);
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.sortButton:hover {
+    background: rgba(229, 169, 60, 0.1);
+}
+
+.searchRow {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.searchInput {
+    flex: 1;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid rgba(113, 128, 150, 0.3);
+    border-radius: 999px;
+    background: rgba(255, 252, 245, 0.94);
+    color: var(--text-strong);
+    font: inherit;
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.searchInput::placeholder {
+    color: var(--text-soft);
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: rgba(229, 169, 60, 0.42);
+    box-shadow: 0 0 0 4px rgba(229, 169, 60, 0.12);
+}
+
+.skeletonList {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.emptyState,
+.loadingState,
+.errorState {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-soft);
+}
+
+:global([data-theme="dark"]) .item,
+:global([data-theme="dark"]) .sortSelect,
+:global([data-theme="dark"]) .sortButton,
+:global([data-theme="dark"]) .searchInput {
+    background: rgba(58, 43, 35, 0.94);
+    border-color: rgba(229, 169, 60, 0.15);
+}
+
+:global([data-theme="dark"]) .item:hover {
+    border-color: rgba(229, 169, 60, 0.25);
+}

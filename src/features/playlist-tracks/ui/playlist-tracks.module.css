@@ -1,0 +1,117 @@
+.trackList {
+    display: grid;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.trackItem {
+    display: grid;
+    grid-template-columns: 28px 40px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid rgba(113, 128, 150, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 252, 245, 0.94);
+    transition: border-color 0.18s ease;
+}
+
+.trackItem:hover {
+    border-color: rgba(229, 169, 60, 0.2);
+}
+
+.trackIndex {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.trackCover {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.trackCoverPlaceholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(229, 169, 60, 0.12), rgba(200, 160, 80, 0.08));
+    font-size: 1rem;
+}
+
+.trackMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.trackTitle {
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trackArtist {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+}
+
+.trackActions {
+    display: flex;
+    gap: 4px;
+}
+
+.actionButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid rgba(113, 128, 150, 0.2);
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.18s ease;
+}
+
+.actionButton:hover {
+    background: rgba(229, 169, 60, 0.1);
+}
+
+.removeButton:hover {
+    background: rgba(139, 0, 0, 0.08);
+    border-color: rgba(139, 0, 0, 0.2);
+}
+
+.playButton {
+    border-color: rgba(229, 169, 60, 0.3);
+    background: rgba(229, 169, 60, 0.08);
+}
+
+.playButton:hover {
+    background: rgba(229, 169, 60, 0.18);
+}
+
+.emptyState {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-soft);
+}
+
+:global([data-theme="dark"]) .trackItem {
+    background: rgba(58, 43, 35, 0.94);
+    border-color: rgba(229, 169, 60, 0.1);
+}
