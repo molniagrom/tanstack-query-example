@@ -3,7 +3,7 @@ import {client} from "../../../shared/api/client.ts";
 import {authKeys} from "../../../shared/api/keys-factories/auth-keys-factory.ts";
 import {localStorageKeys} from "../../../shared/config/localStorage-keys.ts";
 
-export const getCallbackUrl = () => `${window.location.origin}/oauth/callback`
+export const callbackUrl = "http://localhost:5173/oauth/callback"
 
 export const useLoginMutation = () => {
 
@@ -16,7 +16,7 @@ export const useLoginMutation = () => {
                     code: code,
                     rememberMe: true,
                     accessTokenTTL: "10s",
-                    redirectUri: getCallbackUrl()
+                    redirectUri: callbackUrl
                 }
             })
             if (response.error) {

@@ -1,5 +1,5 @@
 import styles from './account-bar.module.css'
-import {getCallbackUrl, useLoginMutation} from "../api/useLoginMutation.ts";
+import {callbackUrl, useLoginMutation} from "../api/useLoginMutation.ts";
 
 export const LoginButton = () => {
 
@@ -7,7 +7,7 @@ export const LoginButton = () => {
 
     const handleLoginClick = () => {
         window.addEventListener("message", handleOauthMessage)
-        window.open(`https://musicfun.it-incubator.app/api/1.0/auth/oauth-redirect?callbackUrl=${getCallbackUrl()}`, "apihub-oauth2", "width=500,height=600")
+        window.open(`https://musicfun.it-incubator.app/api/1.0/auth/oauth-redirect?callbackUrl=${callbackUrl}`, "apihub-oauth2", "width=500,height=600")
     }
 
     const handleOauthMessage = (event: MessageEvent) => {
