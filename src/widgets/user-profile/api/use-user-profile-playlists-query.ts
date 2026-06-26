@@ -10,7 +10,9 @@ export const useUserProfilePlaylistsQuery = (userId: string | undefined) => {
                 params: { query: { userId: userId!, pageNumber: 1, pageSize: 20 } },
                 signal,
             })
-            if (response.error) throw response.error
+            if (response.error) {
+                throw (response as unknown as { error: Error }).error
+            }
             return response.data
         },
         enabled: !!userId,

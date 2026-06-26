@@ -18,7 +18,9 @@ export const useUserProfileLikedPlaylistsQuery = (userId: string | undefined) =>
                 },
                 signal,
             })
-            if (response.error) throw response.error
+            if (response.error) {
+                throw (response as unknown as { error: Error }).error
+            }
             return response.data
         },
         enabled: !!userId,

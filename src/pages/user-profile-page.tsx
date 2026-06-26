@@ -43,7 +43,7 @@ function UserProfilePage() {
     // TODO: open create playlist modal or navigate
   }
 
-  const handleCardMenu = (cardId: string, e: React.MouseEvent) => {
+  const handleCardMenu = (_cardId: string, e: React.MouseEvent) => {
     e.stopPropagation()
     // TODO: open context menu
   }
@@ -95,12 +95,12 @@ function UserProfilePage() {
     return `${mins}:${String(secs).padStart(2, '0')}`
   }
 
-  const renderPlaylistCards = (items: typeof playlists, linkPrefix: string) => (
+  const renderPlaylistCards = (items: typeof playlists) => (
     <ul className={styles.grid}>
       {items.map((item) => (
         <li key={item.id}>
           <Link
-            to={`/${linkPrefix}/$playlistId`}
+            to="/playlist-detail/$playlistId"
             params={{ playlistId: item.id }}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
@@ -164,11 +164,11 @@ function UserProfilePage() {
   const renderContent = () => {
     switch (activeTab) {
       case 'playlists':
-        return renderPlaylistCards(playlists, 'playlist-detail')
+        return renderPlaylistCards(playlists)
       case 'tracks':
         return renderTrackCards(tracks)
       case 'liked-playlists':
-        return renderPlaylistCards(likedPlaylists, 'playlist-detail')
+        return renderPlaylistCards(likedPlaylists)
       case 'liked-tracks':
         return renderTrackCards(likedTracks)
     }
