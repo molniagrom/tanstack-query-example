@@ -13,6 +13,10 @@ import { Route as UserProfileRouteImport } from './user-profile'
 import { Route as TracksRouteImport } from './tracks'
 import { Route as MyPlaylistsRouteImport } from './my-playlists'
 import { Route as IndexRouteImport } from './index'
+import { Route as UserProfileMyTracksRouteImport } from './user-profile/my-tracks'
+import { Route as UserProfileMyPlaylistsRouteImport } from './user-profile/my-playlists'
+import { Route as UserProfileLikedTracksRouteImport } from './user-profile/liked-tracks'
+import { Route as UserProfileLikedPlaylistsRouteImport } from './user-profile/liked-playlists'
 import { Route as TrackDetailTrackIdRouteImport } from './track-detail.$trackId'
 import { Route as PlaylistDetailPlaylistIdRouteImport } from './playlist-detail.$playlistId'
 import { Route as OauthCallbackRouteImport } from './oauth/callback'
@@ -37,6 +41,27 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UserProfileMyTracksRoute = UserProfileMyTracksRouteImport.update({
+  id: '/my-tracks',
+  path: '/my-tracks',
+  getParentRoute: () => UserProfileRoute,
+} as any)
+const UserProfileMyPlaylistsRoute = UserProfileMyPlaylistsRouteImport.update({
+  id: '/my-playlists',
+  path: '/my-playlists',
+  getParentRoute: () => UserProfileRoute,
+} as any)
+const UserProfileLikedTracksRoute = UserProfileLikedTracksRouteImport.update({
+  id: '/liked-tracks',
+  path: '/liked-tracks',
+  getParentRoute: () => UserProfileRoute,
+} as any)
+const UserProfileLikedPlaylistsRoute =
+  UserProfileLikedPlaylistsRouteImport.update({
+    id: '/liked-playlists',
+    path: '/liked-playlists',
+    getParentRoute: () => UserProfileRoute,
+  } as any)
 const TrackDetailTrackIdRoute = TrackDetailTrackIdRouteImport.update({
   id: '/track-detail/$trackId',
   path: '/track-detail/$trackId',
@@ -58,29 +83,41 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
-  '/user-profile': typeof UserProfileRoute
+  '/user-profile': typeof UserProfileRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/playlist-detail/$playlistId': typeof PlaylistDetailPlaylistIdRoute
   '/track-detail/$trackId': typeof TrackDetailTrackIdRoute
+  '/user-profile/liked-playlists': typeof UserProfileLikedPlaylistsRoute
+  '/user-profile/liked-tracks': typeof UserProfileLikedTracksRoute
+  '/user-profile/my-playlists': typeof UserProfileMyPlaylistsRoute
+  '/user-profile/my-tracks': typeof UserProfileMyTracksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
-  '/user-profile': typeof UserProfileRoute
+  '/user-profile': typeof UserProfileRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/playlist-detail/$playlistId': typeof PlaylistDetailPlaylistIdRoute
   '/track-detail/$trackId': typeof TrackDetailTrackIdRoute
+  '/user-profile/liked-playlists': typeof UserProfileLikedPlaylistsRoute
+  '/user-profile/liked-tracks': typeof UserProfileLikedTracksRoute
+  '/user-profile/my-playlists': typeof UserProfileMyPlaylistsRoute
+  '/user-profile/my-tracks': typeof UserProfileMyTracksRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
-  '/user-profile': typeof UserProfileRoute
+  '/user-profile': typeof UserProfileRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/playlist-detail/$playlistId': typeof PlaylistDetailPlaylistIdRoute
   '/track-detail/$trackId': typeof TrackDetailTrackIdRoute
+  '/user-profile/liked-playlists': typeof UserProfileLikedPlaylistsRoute
+  '/user-profile/liked-tracks': typeof UserProfileLikedTracksRoute
+  '/user-profile/my-playlists': typeof UserProfileMyPlaylistsRoute
+  '/user-profile/my-tracks': typeof UserProfileMyTracksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -92,6 +129,10 @@ export interface FileRouteTypes {
     | '/oauth/callback'
     | '/playlist-detail/$playlistId'
     | '/track-detail/$trackId'
+    | '/user-profile/liked-playlists'
+    | '/user-profile/liked-tracks'
+    | '/user-profile/my-playlists'
+    | '/user-profile/my-tracks'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -101,6 +142,10 @@ export interface FileRouteTypes {
     | '/oauth/callback'
     | '/playlist-detail/$playlistId'
     | '/track-detail/$trackId'
+    | '/user-profile/liked-playlists'
+    | '/user-profile/liked-tracks'
+    | '/user-profile/my-playlists'
+    | '/user-profile/my-tracks'
   id:
     | '__root__'
     | '/'
@@ -110,13 +155,17 @@ export interface FileRouteTypes {
     | '/oauth/callback'
     | '/playlist-detail/$playlistId'
     | '/track-detail/$trackId'
+    | '/user-profile/liked-playlists'
+    | '/user-profile/liked-tracks'
+    | '/user-profile/my-playlists'
+    | '/user-profile/my-tracks'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MyPlaylistsRoute: typeof MyPlaylistsRoute
   TracksRoute: typeof TracksRoute
-  UserProfileRoute: typeof UserProfileRoute
+  UserProfileRoute: typeof UserProfileRouteWithChildren
   OauthCallbackRoute: typeof OauthCallbackRoute
   PlaylistDetailPlaylistIdRoute: typeof PlaylistDetailPlaylistIdRoute
   TrackDetailTrackIdRoute: typeof TrackDetailTrackIdRoute
@@ -152,6 +201,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/user-profile/my-tracks': {
+      id: '/user-profile/my-tracks'
+      path: '/my-tracks'
+      fullPath: '/user-profile/my-tracks'
+      preLoaderRoute: typeof UserProfileMyTracksRouteImport
+      parentRoute: typeof UserProfileRoute
+    }
+    '/user-profile/my-playlists': {
+      id: '/user-profile/my-playlists'
+      path: '/my-playlists'
+      fullPath: '/user-profile/my-playlists'
+      preLoaderRoute: typeof UserProfileMyPlaylistsRouteImport
+      parentRoute: typeof UserProfileRoute
+    }
+    '/user-profile/liked-tracks': {
+      id: '/user-profile/liked-tracks'
+      path: '/liked-tracks'
+      fullPath: '/user-profile/liked-tracks'
+      preLoaderRoute: typeof UserProfileLikedTracksRouteImport
+      parentRoute: typeof UserProfileRoute
+    }
+    '/user-profile/liked-playlists': {
+      id: '/user-profile/liked-playlists'
+      path: '/liked-playlists'
+      fullPath: '/user-profile/liked-playlists'
+      preLoaderRoute: typeof UserProfileLikedPlaylistsRouteImport
+      parentRoute: typeof UserProfileRoute
+    }
     '/track-detail/$trackId': {
       id: '/track-detail/$trackId'
       path: '/track-detail/$trackId'
@@ -176,11 +253,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface UserProfileRouteChildren {
+  UserProfileLikedPlaylistsRoute: typeof UserProfileLikedPlaylistsRoute
+  UserProfileLikedTracksRoute: typeof UserProfileLikedTracksRoute
+  UserProfileMyPlaylistsRoute: typeof UserProfileMyPlaylistsRoute
+  UserProfileMyTracksRoute: typeof UserProfileMyTracksRoute
+}
+
+const UserProfileRouteChildren: UserProfileRouteChildren = {
+  UserProfileLikedPlaylistsRoute: UserProfileLikedPlaylistsRoute,
+  UserProfileLikedTracksRoute: UserProfileLikedTracksRoute,
+  UserProfileMyPlaylistsRoute: UserProfileMyPlaylistsRoute,
+  UserProfileMyTracksRoute: UserProfileMyTracksRoute,
+}
+
+const UserProfileRouteWithChildren = UserProfileRoute._addFileChildren(
+  UserProfileRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MyPlaylistsRoute: MyPlaylistsRoute,
   TracksRoute: TracksRoute,
-  UserProfileRoute: UserProfileRoute,
+  UserProfileRoute: UserProfileRouteWithChildren,
   OauthCallbackRoute: OauthCallbackRoute,
   PlaylistDetailPlaylistIdRoute: PlaylistDetailPlaylistIdRoute,
   TrackDetailTrackIdRoute: TrackDetailTrackIdRoute,
