@@ -5,6 +5,7 @@ const API_KEY = process.env.API_KEY || ''
 
 const BLOCKED_HEADERS = new Set([
   'host', 'connection', 'origin', 'referer',
+  'content-length', 'content-encoding', 'transfer-encoding',
   'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto',
   'x-forwarded-port', 'x-forwarded-scheme', 'x-real-ip',
   'x-vercel-forwarded-for', 'x-vercel-ip-city', 'x-vercel-ip-country',
@@ -15,19 +16,36 @@ const BLOCKED_HEADERS = new Set([
 function readRawBody(req: VercelRequest): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = []
+    let finished = false
+
+    const timeout = setTimeout(() => {
+      if (!finished) {
+        finished = true
+        resolve(Buffer.concat(chunks))
+      }
+    }, 5000)
+
     req.on('data', (chunk: Buffer) => chunks.push(chunk))
-    req.on('end', () => resolve(Buffer.concat(chunks)))
-    req.on('error', reject)
+    req.on('end', () => {
+      if (!finished) {
+        finished = true
+        clearTimeout(timeout)
+        resolve(Buffer.concat(chunks))
+      }
+    })
+    req.on('error', (err) => {
+      if (!finished) {
+        finished = true
+        clearTimeout(timeout)
+        reject(err)
+      }
+    })
   })
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log('[proxy] API_KEY available:', !!API_KEY, 'length:', API_KEY.length)
-
-  // The rewrite sends path via query param: /api/proxy?path=/1.0/playlists&search=...
   const apiPath = (typeof req.query.path === 'string' ? req.query.path : '') || '/1.0/'
 
-  // Rebuild query string without the 'path' param
   const queryParams = new URLSearchParams()
   for (const [key, value] of Object.entries(req.query)) {
     if (key === 'path') continue
@@ -40,7 +58,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const qs = queryParams.toString()
   const targetUrl = `${BACKEND_BASE}/api${apiPath}${qs ? '?' + qs : ''}`
 
-  // Build headers
   const headers: Record<string, string> = {}
   for (const [key, value] of Object.entries(req.headers)) {
     if (BLOCKED_HEADERS.has(key.toLowerCase())) continue
@@ -57,17 +74,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     headers['api-key'] = API_KEY
   }
 
+  const method = (req.method || 'GET').toUpperCase()
+  const isBodyMethod = !['GET', 'HEAD'].includes(method)
+
   try {
-    const rawBody = ['GET', 'HEAD'].includes((req.method || 'GET').toUpperCase())
-      ? undefined
-      : await readRawBody(req)
+    const rawBody = isBodyMethod ? await readRawBody(req) : undefined
+    const hasBody = rawBody && rawBody.length > 0
+
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 15000)
 
     const response = await fetch(targetUrl, {
-      method: req.method || 'GET',
+      method,
       headers,
-      body: rawBody ? new Uint8Array(rawBody) : undefined,
+      body: hasBody ? new Uint8Array(rawBody) : undefined,
       redirect: 'follow',
+      signal: controller.signal,
     })
+
+    clearTimeout(timeout)
 
     res.status(response.status)
 
@@ -86,8 +111,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const data = await response.arrayBuffer()
     res.send(Buffer.from(data))
   } catch (error) {
-    console.error('Proxy error:', error)
-    res.status(502).json({ error: 'Proxy error', message: String(error) })
+    console.error('[proxy] Error:', String(error), 'URL:', targetUrl, 'Method:', method)
+    res.status(502).json({ error: 'Proxy error', message: String(error), url: targetUrl })
   }
 }
 
