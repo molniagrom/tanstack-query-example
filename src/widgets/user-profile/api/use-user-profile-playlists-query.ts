@@ -14,5 +14,6 @@ export const useUserProfilePlaylistsQuery = (userId: string | undefined) => {
             return response.data
         },
         enabled: !!userId,
+        retry: false,
     })
 }

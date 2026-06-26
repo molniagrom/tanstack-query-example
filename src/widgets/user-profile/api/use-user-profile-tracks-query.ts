@@ -11,7 +11,7 @@ export const useUserProfileTracksQuery = (userId: string | undefined) => {
                     query: {
                         userId: userId!,
                         pageNumber: 1,
-                        pageSize: 100,
+                        pageSize: 20,
                         sortBy: 'publishedAt',
                         sortDirection: 'desc',
                         paginationType: 'offset',
@@ -23,5 +23,6 @@ export const useUserProfileTracksQuery = (userId: string | undefined) => {
             return response.data
         },
         enabled: !!userId,
+        retry: false,
     })
 }

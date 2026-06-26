@@ -11,6 +11,8 @@ export const useUserProfileLikedPlaylistsQuery = (userId: string | undefined) =>
                     query: {
                         pageNumber: 1,
                         pageSize: 100,
+                        sortBy: 'addedAt',
+                        sortDirection: 'desc',
                         onlyLikedByMe: true,
                     },
                 },
@@ -20,5 +22,6 @@ export const useUserProfileLikedPlaylistsQuery = (userId: string | undefined) =>
             return response.data
         },
         enabled: !!userId,
+        retry: false,
     })
 }
