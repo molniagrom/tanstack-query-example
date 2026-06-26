@@ -34,55 +34,30 @@ export const LikeDislikePlaylist = ({playlistId, currentUserReaction, likesCount
         if (optimisticReaction === 1) {
             setOptimisticReaction(0)
             setOptimisticLikes(l => l - 1)
-            removeReactionMutation.mutate(playlistId, {
-                onError: () => {
-                    setOptimisticReaction(currentUserReaction)
-                    setOptimisticLikes(likesCount)
-                    setOptimisticDislikes(dislikesCount)
-                }
-            })
+            removeReactionMutation.mutate(playlistId)
         } else {
-            const newReaction: 0 | 1 | -1 = optimisticReaction === -1 ? 1 : 1
             const likesDelta = optimisticReaction === -1 ? 1 : 1
             const dislikesDelta = optimisticReaction === -1 ? -1 : 0
-            setOptimisticReaction(newReaction)
+            setOptimisticReaction(1)
             setOptimisticLikes(l => l + likesDelta)
             setOptimisticDislikes(d => d + dislikesDelta)
-            likeMutation.mutate(playlistId, {
-                onError: () => {
-                    setOptimisticReaction(currentUserReaction)
-                    setOptimisticLikes(likesCount)
-                    setOptimisticDislikes(dislikesCount)
-                }
-            })
+            likeMutation.mutate(playlistId)
         }
-    }, [optimisticReaction, playlistId, currentUserReaction, likesCount, dislikesCount])
+    }, [optimisticReaction, playlistId])
 
     const handleDislike = useCallback(() => {
         if (optimisticReaction === -1) {
             setOptimisticReaction(0)
             setOptimisticDislikes(d => d - 1)
-            removeReactionMutation.mutate(playlistId, {
-                onError: () => {
-                    setOptimisticReaction(currentUserReaction)
-                    setOptimisticLikes(likesCount)
-                    setOptimisticDislikes(dislikesCount)
-                }
-            })
+            removeReactionMutation.mutate(playlistId)
         } else {
             const likesDelta = optimisticReaction === 1 ? -1 : 0
             setOptimisticReaction(-1)
             setOptimisticLikes(l => l + likesDelta)
             setOptimisticDislikes(d => d + 1)
-            dislikeMutation.mutate(playlistId, {
-                onError: () => {
-                    setOptimisticReaction(currentUserReaction)
-                    setOptimisticLikes(likesCount)
-                    setOptimisticDislikes(dislikesCount)
-                }
-            })
+            dislikeMutation.mutate(playlistId)
         }
-    }, [optimisticReaction, playlistId, currentUserReaction, likesCount, dislikesCount])
+    }, [optimisticReaction, playlistId])
 
     const handleRemove = useCallback(() => {
         const likesDelta = optimisticReaction === 1 ? -1 : 0
@@ -90,14 +65,8 @@ export const LikeDislikePlaylist = ({playlistId, currentUserReaction, likesCount
         setOptimisticReaction(0)
         setOptimisticLikes(l => l + likesDelta)
         setOptimisticDislikes(d => d + dislikesDelta)
-        removeReactionMutation.mutate(playlistId, {
-            onError: () => {
-                setOptimisticReaction(currentUserReaction)
-                setOptimisticLikes(likesCount)
-                setOptimisticDislikes(dislikesCount)
-            }
-        })
-    }, [optimisticReaction, playlistId, currentUserReaction, likesCount, dislikesCount])
+        removeReactionMutation.mutate(playlistId)
+    }, [optimisticReaction, playlistId])
 
     return (
         <div className={styles.reactions}>
