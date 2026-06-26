@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './__root'
+import { Route as UserProfileRouteImport } from './user-profile'
 import { Route as TracksRouteImport } from './tracks'
 import { Route as MyPlaylistsRouteImport } from './my-playlists'
 import { Route as IndexRouteImport } from './index'
@@ -16,6 +17,11 @@ import { Route as TrackDetailTrackIdRouteImport } from './track-detail.$trackId'
 import { Route as PlaylistDetailPlaylistIdRouteImport } from './playlist-detail.$playlistId'
 import { Route as OauthCallbackRouteImport } from './oauth/callback'
 
+const UserProfileRoute = UserProfileRouteImport.update({
+  id: '/user-profile',
+  path: '/user-profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TracksRoute = TracksRouteImport.update({
   id: '/tracks',
   path: '/tracks',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
+  '/user-profile': typeof UserProfileRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/playlist-detail/$playlistId': typeof PlaylistDetailPlaylistIdRoute
   '/track-detail/$trackId': typeof TrackDetailTrackIdRoute
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
+  '/user-profile': typeof UserProfileRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/playlist-detail/$playlistId': typeof PlaylistDetailPlaylistIdRoute
   '/track-detail/$trackId': typeof TrackDetailTrackIdRoute
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
+  '/user-profile': typeof UserProfileRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/playlist-detail/$playlistId': typeof PlaylistDetailPlaylistIdRoute
   '/track-detail/$trackId': typeof TrackDetailTrackIdRoute
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/'
     | '/my-playlists'
     | '/tracks'
+    | '/user-profile'
     | '/oauth/callback'
     | '/playlist-detail/$playlistId'
     | '/track-detail/$trackId'
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/'
     | '/my-playlists'
     | '/tracks'
+    | '/user-profile'
     | '/oauth/callback'
     | '/playlist-detail/$playlistId'
     | '/track-detail/$trackId'
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/my-playlists'
     | '/tracks'
+    | '/user-profile'
     | '/oauth/callback'
     | '/playlist-detail/$playlistId'
     | '/track-detail/$trackId'
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MyPlaylistsRoute: typeof MyPlaylistsRoute
   TracksRoute: typeof TracksRoute
+  UserProfileRoute: typeof UserProfileRoute
   OauthCallbackRoute: typeof OauthCallbackRoute
   PlaylistDetailPlaylistIdRoute: typeof PlaylistDetailPlaylistIdRoute
   TrackDetailTrackIdRoute: typeof TrackDetailTrackIdRoute
@@ -111,6 +124,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/user-profile': {
+      id: '/user-profile'
+      path: '/user-profile'
+      fullPath: '/user-profile'
+      preLoaderRoute: typeof UserProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tracks': {
       id: '/tracks'
       path: '/tracks'
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MyPlaylistsRoute: MyPlaylistsRoute,
   TracksRoute: TracksRoute,
+  UserProfileRoute: UserProfileRoute,
   OauthCallbackRoute: OauthCallbackRoute,
   PlaylistDetailPlaylistIdRoute: PlaylistDetailPlaylistIdRoute,
   TrackDetailTrackIdRoute: TrackDetailTrackIdRoute,

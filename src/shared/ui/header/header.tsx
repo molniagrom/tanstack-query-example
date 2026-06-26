@@ -33,6 +33,13 @@ export const Header = ({renderAccountBar}: Props) => {
                             >
                                 Tracks
                             </Link>
+                            <Link
+                                to="/user-profile"
+                                className={styles.link}
+                                activeProps={{className: `${styles.link} ${styles.linkActive}`}}
+                            >
+                                Profile
+                            </Link>
                         </nav>
                     </div>
                 </div>
