@@ -3,6 +3,10 @@
     {
       "source": "/api/1.0/:path*",
       "destination": "/api/proxy?path=/1.0/:path*"
+    },
+    {
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
     }
   ]
 }
