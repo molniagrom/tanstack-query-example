@@ -23,10 +23,16 @@ function PlaylistDetailPage() {
 
     const attrs = playlist.data.attributes
     const isOwner = me?.userId === attrs.user.id
+    const coverUrl = attrs.images.main?.[0]?.url
 
     return (
         <section className={styles.shell}>
             <div className={styles.hero}>
+                {coverUrl ? (
+                    <img src={coverUrl} alt={attrs.title} className={styles.heroImage} />
+                ) : (
+                    <div className={styles.heroImagePlaceholder}>🎵</div>
+                )}
                 <div className={styles.heroContent}>
                     <span className={styles.eyebrow}>Playlist</span>
                     <h2>{attrs.title}</h2>

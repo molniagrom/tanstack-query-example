@@ -46,6 +46,11 @@ function TrackDetailPage() {
     return (
         <section className={styles.shell}>
             <div className={styles.hero}>
+                {coverUrl ? (
+                    <img src={coverUrl} alt={attrs.title} className={styles.heroImage} />
+                ) : (
+                    <div className={styles.heroImagePlaceholder}>🎵</div>
+                )}
                 <div className={styles.heroContent}>
                     <span className={styles.eyebrow}>Track</span>
                     <h2>{attrs.title}</h2>
@@ -71,10 +76,6 @@ function TrackDetailPage() {
                     )}
                 </div>
             </div>
-
-            {coverUrl && (
-                <img src={coverUrl} alt={attrs.title} style={{width: 200, height: 200, borderRadius: 16, objectFit: "cover"}} />
-            )}
 
             <LikeDislikeTrack
                 trackId={trackId}
