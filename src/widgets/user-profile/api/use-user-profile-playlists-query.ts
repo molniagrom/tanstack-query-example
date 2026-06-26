@@ -7,7 +7,7 @@ export const useUserProfilePlaylistsQuery = (userId: string | undefined) => {
         queryKey: playlistsKeys.myList(),
         queryFn: async ({ signal }) => {
             const response = await client.GET('/playlists', {
-                params: { query: { userId: userId! } },
+                params: { query: { userId: userId!, pageNumber: 1, pageSize: 20 } },
                 signal,
             })
             if (response.error) throw response.error

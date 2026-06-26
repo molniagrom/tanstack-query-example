@@ -10,7 +10,7 @@ export const useUserProfileLikedPlaylistsQuery = (userId: string | undefined) =>
                 params: {
                     query: {
                         pageNumber: 1,
-                        pageSize: 100,
+                        pageSize: 20,
                         sortBy: 'addedAt',
                         sortDirection: 'desc',
                         onlyLikedByMe: true,
