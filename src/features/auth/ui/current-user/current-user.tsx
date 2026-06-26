@@ -11,7 +11,7 @@ export const CurrentUser = () => {
 
     return (
         <div className={styles.meInfoContainer}>
-            <Link to="/my-playlists" activeOptions={{exact: true}} className={styles.userLink}>
+            <Link to="/user-profile/my-playlists" activeOptions={{exact: true}} className={styles.userLink}>
                 {query.data!.login}
             </Link>
             <LogoutButton/>

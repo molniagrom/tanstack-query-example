@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './__root'
 import { Route as UserProfileRouteImport } from './user-profile'
 import { Route as TracksRouteImport } from './tracks'
-import { Route as MyPlaylistsRouteImport } from './my-playlists'
 import { Route as IndexRouteImport } from './index'
 import { Route as UserProfileMyTracksRouteImport } from './user-profile/my-tracks'
 import { Route as UserProfileMyPlaylistsRouteImport } from './user-profile/my-playlists'
@@ -29,11 +28,6 @@ const UserProfileRoute = UserProfileRouteImport.update({
 const TracksRoute = TracksRouteImport.update({
   id: '/tracks',
   path: '/tracks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyPlaylistsRoute = MyPlaylistsRouteImport.update({
-  id: '/my-playlists',
-  path: '/my-playlists',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -81,7 +75,6 @@ const OauthCallbackRoute = OauthCallbackRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
   '/user-profile': typeof UserProfileRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
@@ -94,7 +87,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
   '/user-profile': typeof UserProfileRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
@@ -108,7 +100,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/my-playlists': typeof MyPlaylistsRoute
   '/tracks': typeof TracksRoute
   '/user-profile': typeof UserProfileRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
@@ -123,7 +114,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/my-playlists'
     | '/tracks'
     | '/user-profile'
     | '/oauth/callback'
@@ -136,7 +126,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/my-playlists'
     | '/tracks'
     | '/user-profile'
     | '/oauth/callback'
@@ -149,7 +138,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/my-playlists'
     | '/tracks'
     | '/user-profile'
     | '/oauth/callback'
@@ -163,7 +151,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MyPlaylistsRoute: typeof MyPlaylistsRoute
   TracksRoute: typeof TracksRoute
   UserProfileRoute: typeof UserProfileRouteWithChildren
   OauthCallbackRoute: typeof OauthCallbackRoute
@@ -185,13 +172,6 @@ declare module '@tanstack/react-router' {
       path: '/tracks'
       fullPath: '/tracks'
       preLoaderRoute: typeof TracksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-playlists': {
-      id: '/my-playlists'
-      path: '/my-playlists'
-      fullPath: '/my-playlists'
-      preLoaderRoute: typeof MyPlaylistsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -273,7 +253,6 @@ const UserProfileRouteWithChildren = UserProfileRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MyPlaylistsRoute: MyPlaylistsRoute,
   TracksRoute: TracksRoute,
   UserProfileRoute: UserProfileRouteWithChildren,
   OauthCallbackRoute: OauthCallbackRoute,
