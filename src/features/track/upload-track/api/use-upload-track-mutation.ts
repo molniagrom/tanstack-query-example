@@ -1,4 +1,5 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
+import axios from "axios";
 import {tracksKeys} from "../../../../shared/api/keys-factories/tracks-keys-factory.ts";
 import {localStorageKeys} from "../../../../shared/config/localStorage-keys.ts";
 import {baseUrl, apiKey} from "../../../../shared/config/api-config.ts";
@@ -9,87 +10,68 @@ type UploadTrackParams = {
     onProgress?: (progress: number) => void
 }
 
-export const useUploadTrackMutation = () => {
-    const queryClient = useQueryClient()
+let refreshPromise: Promise<void> | null = null
 
-    const uploadWithXHR = (title: string, file: File, onProgress?: (progress: number) => void): Promise<unknown> => {
-        return new Promise((resolve, reject) => {
-            const formData = new FormData()
-            formData.append('title', title)
-            formData.append('file', file)
+async function refreshAccessToken(): Promise<void> {
+    if (!refreshPromise) {
+        refreshPromise = (async () => {
+            const refreshToken = localStorage.getItem(localStorageKeys.refreshToken)
+            if (!refreshToken) throw new Error('No refresh token')
 
-            const xhr = new XMLHttpRequest()
-
-            xhr.upload.addEventListener('progress', (event) => {
-                if (event.lengthComputable && onProgress) {
-                    onProgress(Math.round((event.loaded / event.total) * 100))
-                }
+            const response = await axios.post(`${baseUrl}auth/refresh`, {refreshToken}, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(apiKey ? {'API-KEY': apiKey} : {}),
+                },
             })
 
-            xhr.addEventListener('load', () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    try {
-                        resolve(JSON.parse(xhr.responseText))
-                    } catch {
-                        resolve(null)
-                    }
-                } else if (xhr.status === 401) {
-                    reject(new Error('Unauthorized'))
-                } else {
-                    try {
-                        const error = JSON.parse(xhr.responseText)
-                        reject(new Error(error.message || error.errors?.[0]?.detail || 'Upload failed'))
-                    } catch {
-                        reject(new Error('Upload failed'))
-                    }
-                }
-            })
+            localStorage.setItem(localStorageKeys.accessToken, response.data.accessToken)
+            localStorage.setItem(localStorageKeys.refreshToken, response.data.refreshToken)
+        })()
 
-            xhr.addEventListener('error', () => reject(new Error('Network error')))
-            xhr.open('POST', `${baseUrl}playlists/tracks/upload`)
-
-            const accessToken = localStorage.getItem(localStorageKeys.accessToken)
-            if (accessToken) {
-                xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`)
-            }
-            if (apiKey) {
-                xhr.setRequestHeader('api-key', apiKey)
-            }
-
-            xhr.send(formData)
+        refreshPromise.finally(() => {
+            refreshPromise = null
         })
     }
+
+    return refreshPromise
+}
+
+async function uploadTrack(title: string, file: File, onProgress?: (progress: number) => void): Promise<unknown> {
+    const formData = new FormData()
+    formData.append('data[type]', 'tracks')
+    formData.append('data[attributes][title]', title)
+    formData.append('file', file)
+
+    const headers: Record<string, string> = {}
+    const accessToken = localStorage.getItem(localStorageKeys.accessToken)
+    if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`
+    if (apiKey) headers['api-key'] = apiKey
+
+    const response = await axios.post(`${baseUrl}playlists/tracks/upload`, formData, {
+        headers,
+        onUploadProgress: (event) => {
+            if (event.total && onProgress) {
+                onProgress(Math.round((event.loaded / event.total) * 100))
+            }
+        },
+    })
+
+    return response.data
+}
+
+export const useUploadTrackMutation = () => {
+    const queryClient = useQueryClient()
 
     return useMutation({
         meta: {globalErrorHandler: 'off'},
         mutationFn: async ({title, file, onProgress}: UploadTrackParams) => {
             try {
-                return await uploadWithXHR(title, file, onProgress)
+                return await uploadTrack(title, file, onProgress)
             } catch (error) {
-                if (error instanceof Error && error.message === 'Unauthorized') {
-                    const refreshToken = localStorage.getItem(localStorageKeys.refreshToken)
-                    if (!refreshToken) throw new Error('No refresh token')
-
-                    const response = await fetch(`${baseUrl}auth/refresh`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...(apiKey ? {'API-KEY': apiKey} : {}),
-                        },
-                        body: JSON.stringify({refreshToken}),
-                    })
-
-                    if (!response.ok) {
-                        localStorage.removeItem(localStorageKeys.accessToken)
-                        localStorage.removeItem(localStorageKeys.refreshToken)
-                        throw new Error('Refresh token failed')
-                    }
-
-                    const data = await response.json()
-                    localStorage.setItem(localStorageKeys.accessToken, data.accessToken)
-                    localStorage.setItem(localStorageKeys.refreshToken, data.refreshToken)
-
-                    return await uploadWithXHR(title, file, onProgress)
+                if (axios.isAxiosError(error) && error.response?.status === 401) {
+                    await refreshAccessToken()
+                    return await uploadTrack(title, file, onProgress)
                 }
                 throw error
             }

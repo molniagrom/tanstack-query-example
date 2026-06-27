@@ -19,6 +19,7 @@
     "@tanstack/react-query-devtools": "^5.100.8",
     "@tanstack/react-router": "^1.167.0",
     "@tanstack/router-devtools": "^1.167.0",
+    "axios": "^1.18.1",
     "openapi-fetch": "^0.17.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",

@@ -23,7 +23,7 @@ function readRawBody(req: VercelRequest): Promise<Buffer> {
         finished = true
         resolve(Buffer.concat(chunks))
       }
-    }, 5000)
+    }, 30000)
 
     req.on('data', (chunk: Buffer) => chunks.push(chunk))
     req.on('end', () => {
