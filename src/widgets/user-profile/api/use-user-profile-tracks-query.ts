@@ -15,6 +15,7 @@ export const useUserProfileTracksQuery = (userId: string | undefined) => {
                         sortBy: 'publishedAt',
                         sortDirection: 'desc',
                         paginationType: 'offset',
+                        includeDrafts: true,
                     },
                 },
                 signal,
