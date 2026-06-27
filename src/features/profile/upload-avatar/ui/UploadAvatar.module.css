@@ -1,0 +1,144 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid rgba(229, 169, 60, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  object-fit: cover;
+  background: linear-gradient(135deg, rgba(229, 169, 60, 0.15), rgba(62, 39, 35, 0.08));
+}
+
+.placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid rgba(229, 169, 60, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--royal);
+  background: linear-gradient(135deg, rgba(229, 169, 60, 0.15), rgba(62, 39, 35, 0.08));
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.uploadButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(126, 89, 20, 0.7);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f9e5a7 0%, #e5a93c 52%, #c98b1d 100%);
+  color: #3e2723;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.uploadButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(126, 89, 20, 0.24);
+}
+
+.uploadButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(139, 0, 0, 0.3);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--crimson);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.removeButton:hover {
+  background: rgba(139, 0, 0, 0.06);
+  border-color: rgba(139, 0, 0, 0.45);
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.error {
+  padding: 6px 10px;
+  border: 1px solid rgba(139, 0, 0, 0.2);
+  border-radius: 8px;
+  background: rgba(139, 0, 0, 0.06);
+  color: var(--crimson);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .avatar,
+  .placeholder {
+    width: 90px;
+    height: 90px;
+    font-size: 2rem;
+  }
+}
+
+:global([data-theme="dark"]) .avatar,
+:global([data-theme="dark"]) .placeholder {
+  border-color: rgba(229, 169, 60, 0.2);
+}
+
+:global([data-theme="dark"]) .uploadButton {
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+:global([data-theme="dark"]) .removeButton {
+  border-color: rgba(255, 138, 128, 0.24);
+}
+
+:global([data-theme="dark"]) .removeButton:hover {
+  background: rgba(255, 138, 128, 0.08);
+  border-color: rgba(255, 138, 128, 0.4);
+}
+
+:global([data-theme="dark"]) .error {
+  background: rgba(74, 30, 28, 0.3);
+  border-color: rgba(255, 138, 128, 0.24);
+}

@@ -1,5 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
 import { useMeQuery } from '../../features/auth/api/use-me-query.ts'
+import { UploadAvatar } from '../../features/profile/upload-avatar/ui/UploadAvatar.tsx'
 import styles from '../../pages/user-profile-page.module.css'
 
 const TABS = [
@@ -11,10 +12,6 @@ const TABS = [
 
 function UserProfileLayout() {
   const meQuery = useMeQuery()
-
-  const handleEditProfile = () => {
-    // TODO: open edit profile modal
-  }
 
   if (meQuery.isPending) {
     return (
@@ -52,9 +49,7 @@ function UserProfileLayout() {
   return (
     <section className={styles.profilePage}>
       <div className={styles.header}>
-        <div className={styles.avatarPlaceholder}>
-          {meQuery.data.login.charAt(0).toUpperCase()}
-        </div>
+        <UploadAvatar userId={meQuery.data.userId} login={meQuery.data.login} />
 
         <div className={styles.headerInfo}>
           <h1 className={styles.headerName}>{meQuery.data.login}</h1>
@@ -69,14 +64,6 @@ function UserProfileLayout() {
             </div>
           </div>
         </div>
-
-        <button
-          type="button"
-          className={styles.editButton}
-          onClick={handleEditProfile}
-        >
-          Edit profile
-        </button>
       </div>
 
       <ul className={styles.tabs}>
